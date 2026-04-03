@@ -232,6 +232,214 @@ export const LESSONS: LessonDef[] = [
       },
     ],
   },
+
+  // ─── Intermediate Lessons ──────────────────────────────────────────────────
+
+  {
+    id: 'seventh-chords',
+    title: '7th Chords',
+    module: 'Intermediate Harmony',
+    level: 'INTERMEDIATE',
+    concepts: ['7th chords', 'maj7', 'dom7', 'min7'],
+    xpReward: 35,
+    order: 6,
+    prerequisites: ['chord-progressions-intro'],
+    steps: [
+      {
+        type: 'text',
+        title: 'Beyond Triads',
+        content: `Triads use 3 notes (1st, 3rd, 5th). **7th chords** add a 4th note — the **7th degree** of the scale.\n\nThis extra note adds richness, color, and tension. There are several types:\n\n- **Major 7th (maj7):** Major triad + major 7th → dreamy, jazzy\n- **Dominant 7th (7):** Major triad + minor 7th → bluesy, wants to resolve\n- **Minor 7th (m7):** Minor triad + minor 7th → smooth, mellow\n- **Half-diminished (m7b5):** Diminished triad + minor 7th → dark, unresolved`,
+      },
+      {
+        type: 'quiz',
+        question: 'What note do you add to a triad to make a 7th chord?',
+        options: ['The 2nd', 'The 4th', 'The 6th', 'The 7th'],
+        correctIndex: 3,
+        explanation: '7th chords add the 7th scale degree on top of a triad (1-3-5-7).',
+      },
+      {
+        type: 'text',
+        title: 'Cmaj7 vs C7',
+        content: `These look similar but sound very different!\n\n**Cmaj7** = C, E, G, **B** (major 7th)\nSmooth, stable, sophisticated — used in jazz and R&B.\n\n**C7** = C, E, G, **Bb** (minor/flat 7th)\nBluesy, tense, wants to move to F — used in blues, rock, and jazz.\n\nThe difference is just one half-step (B vs Bb), but it completely changes the feeling.`,
+      },
+      {
+        type: 'quiz',
+        question: 'A dominant 7th chord (like C7) uses which type of 7th?',
+        options: ['Major 7th (B)', 'Minor/flat 7th (Bb)', 'Augmented 7th', 'Diminished 7th'],
+        correctIndex: 1,
+        explanation: 'A dominant 7th chord uses a minor (flat) 7th. That\'s what gives it the bluesy, unresolved tension.',
+      },
+      {
+        type: 'exercise',
+        instruction: 'Play a Cmaj7 chord: C4, E4, G4, B4',
+        expectedNotes: ['C4', 'E4', 'G4', 'B4'],
+      },
+    ],
+  },
+  {
+    id: 'chord-inversions',
+    title: 'Chord Inversions',
+    module: 'Intermediate Harmony',
+    level: 'INTERMEDIATE',
+    concepts: ['inversions', 'root position', 'voice leading'],
+    xpReward: 35,
+    order: 7,
+    prerequisites: ['seventh-chords'],
+    steps: [
+      {
+        type: 'text',
+        title: 'Same Notes, Different Order',
+        content: `A **chord inversion** is the same chord with a different note on the bottom.\n\nC major = C, E, G. All three of these are C major:\n\n- **Root position:** C-E-G (C on bottom)\n- **1st inversion:** E-G-C (E on bottom)\n- **2nd inversion:** G-C-E (G on bottom)\n\nThey're all "C major" but each one has a different feel and smoothness when moving between chords.`,
+      },
+      {
+        type: 'quiz',
+        question: 'In first inversion of C major, which note is on the bottom?',
+        options: ['C', 'E', 'G', 'B'],
+        correctIndex: 1,
+        explanation: '1st inversion puts the 3rd (E) on the bottom. Root position has the root (C), 2nd inversion has the 5th (G).',
+      },
+      {
+        type: 'text',
+        title: 'Why Use Inversions?',
+        content: `Inversions are key to **voice leading** — making chord changes sound smooth instead of jumpy.\n\nInstead of leaping to a new chord position, inversions let you keep common notes and move the others by small steps.\n\nExample progression C → F → G:\n- Without inversions: big jumps between positions\n- With inversions: C (root) → F (2nd inv, C stays) → G (1st inv, B moves to C)\n\nSmooth voice leading is what makes piano playing and arranging sound professional.`,
+      },
+      {
+        type: 'quiz',
+        question: 'Voice leading means:',
+        options: [
+          'Playing as loud as possible',
+          'Moving smoothly between chords with minimal note movement',
+          'Singing while playing',
+          'Playing only root position chords'
+        ],
+        correctIndex: 1,
+        explanation: 'Voice leading is about smooth, minimal movement between chords. Inversions make this possible.',
+      },
+    ],
+  },
+  {
+    id: 'intro-to-modes',
+    title: 'Introduction to Modes',
+    module: 'Intermediate Scales',
+    level: 'INTERMEDIATE',
+    concepts: ['modes', 'dorian', 'mixolydian'],
+    xpReward: 40,
+    order: 8,
+    prerequisites: ['major-scale', 'chord-progressions-intro'],
+    steps: [
+      {
+        type: 'text',
+        title: 'What Are Modes?',
+        content: `**Modes** are scales built by starting on different notes of the major scale.\n\nTake C major: C D E F G A B. Now play the same notes, but start on D:\n\n**D E F G A B C D** — this is **D Dorian**.\n\nSame notes as C major, but it sounds completely different because D is now "home."\n\nEach starting note creates a different mode with a unique mood.`,
+      },
+      {
+        type: 'text',
+        title: 'The 7 Modes',
+        content: `Starting from each degree of the major scale:\n\n1. **Ionian** (1st) — The regular major scale. Bright, happy.\n2. **Dorian** (2nd) — Minor with a brighter 6th. Jazzy, groovy.\n3. **Phrygian** (3rd) — Exotic, Spanish. Dark with a flat 2nd.\n4. **Lydian** (4th) — Dreamy, floating. Major with a raised 4th.\n5. **Mixolydian** (5th) — Bluesy major. Like major but with a flat 7th.\n6. **Aeolian** (6th) — Natural minor. Sad, dark.\n7. **Locrian** (7th) — Unstable, tense. Rarely used in songs.`,
+      },
+      {
+        type: 'quiz',
+        question: 'D Dorian uses the same notes as which major scale?',
+        options: ['D major', 'C major', 'G major', 'F major'],
+        correctIndex: 1,
+        explanation: 'D Dorian starts on the 2nd degree of C major, so it uses the same notes: all naturals (no sharps or flats).',
+      },
+      {
+        type: 'quiz',
+        question: 'Which mode sounds "Spanish" or exotic?',
+        options: ['Dorian', 'Phrygian', 'Lydian', 'Mixolydian'],
+        correctIndex: 1,
+        explanation: 'Phrygian has a flat 2nd which gives it that distinctive Spanish/exotic flavor.',
+      },
+      {
+        type: 'exercise',
+        instruction: 'Play D Dorian: D4, E4, F4, G4, A4, B4, C5, D5',
+        expectedNotes: ['D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5'],
+      },
+    ],
+  },
+  {
+    id: 'ii-v-i',
+    title: 'The ii-V-I Progression',
+    module: 'Intermediate Harmony',
+    level: 'INTERMEDIATE',
+    concepts: ['ii-V-I', 'jazz harmony', 'tension and resolution'],
+    xpReward: 40,
+    order: 9,
+    prerequisites: ['seventh-chords'],
+    steps: [
+      {
+        type: 'text',
+        title: 'The Most Important Jazz Progression',
+        content: `The **ii-V-I** (two-five-one) is the backbone of jazz and shows up in pop, R&B, and film music.\n\nIn C major:\n- **ii** = Dm7 (D minor 7th)\n- **V** = G7 (G dominant 7th)\n- **I** = Cmaj7 (C major 7th)\n\nIt creates a beautiful arc: **preparation → tension → resolution**.\n\nThe ii chord sets things up, the V chord creates tension (it really wants to go somewhere), and the I chord brings it home.`,
+      },
+      {
+        type: 'quiz',
+        question: 'In the key of C, what is the ii chord?',
+        options: ['C', 'Dm', 'Em', 'F'],
+        correctIndex: 1,
+        explanation: 'The ii chord is built on the 2nd degree of the scale. In C major, that\'s D, and it\'s naturally minor.',
+      },
+      {
+        type: 'text',
+        title: 'Why ii-V-I Works',
+        content: `Each chord moves to the next by the strongest motion in music: **root movement by a 4th/5th**.\n\n- D → G (up a 4th)\n- G → C (up a 4th)\n\nThis "cycle of 4ths" motion is the most satisfying harmonic movement to our ears.\n\nOnce you can hear ii-V-I, you'll start recognizing it everywhere — "Autumn Leaves," "Fly Me to the Moon," even pop songs use it.`,
+      },
+      {
+        type: 'quiz',
+        question: 'What type of chord is the V in a ii-V-I?',
+        options: ['Major 7th', 'Minor 7th', 'Dominant 7th', 'Diminished'],
+        correctIndex: 2,
+        explanation: 'The V chord is a dominant 7th — that flat 7th creates the tension that demands resolution to the I chord.',
+      },
+    ],
+  },
+  {
+    id: 'minor-scales',
+    title: 'The Three Minor Scales',
+    module: 'Intermediate Scales',
+    level: 'INTERMEDIATE',
+    concepts: ['natural minor', 'harmonic minor', 'melodic minor'],
+    xpReward: 35,
+    order: 10,
+    prerequisites: ['major-scale', 'intro-to-modes'],
+    steps: [
+      {
+        type: 'text',
+        title: 'Natural Minor',
+        content: `The **natural minor** scale is the 6th mode (Aeolian) of the major scale.\n\nA natural minor: **A B C D E F G A**\n\nPattern: **W H W W H W W**\n\nIt's the sad, dark-sounding scale used in countless rock and pop songs. It uses the exact same notes as C major, just starting on A.`,
+      },
+      {
+        type: 'text',
+        title: 'Harmonic Minor',
+        content: `The **harmonic minor** raises the 7th note by a half step.\n\nA harmonic minor: A B C D E F **G#** A\n\nThis creates a **leading tone** (G# → A) that strongly pulls back to the root. It also creates an exotic gap between the 6th and 7th (F to G# = 1.5 steps).\n\nThis is the scale that sounds "classical" or "Middle Eastern."`,
+      },
+      {
+        type: 'quiz',
+        question: 'What makes harmonic minor different from natural minor?',
+        options: ['Raised 3rd', 'Lowered 5th', 'Raised 7th', 'Raised 6th'],
+        correctIndex: 2,
+        explanation: 'Harmonic minor raises the 7th degree by a half step to create a leading tone.',
+      },
+      {
+        type: 'text',
+        title: 'Melodic Minor',
+        content: `**Melodic minor** raises both the 6th AND 7th going up, then reverts to natural minor coming down.\n\nA melodic minor ascending: A B C D E **F# G#** A\nA melodic minor descending: A G F E D C B A (= natural minor)\n\nThis smooths out the awkward 1.5-step gap in harmonic minor while keeping the strong leading tone. Classical composers love it.`,
+      },
+      {
+        type: 'quiz',
+        question: 'Which minor scale raises both the 6th and 7th when ascending?',
+        options: ['Natural minor', 'Harmonic minor', 'Melodic minor', 'Pentatonic minor'],
+        correctIndex: 2,
+        explanation: 'Melodic minor raises both the 6th and 7th ascending, then uses natural minor descending.',
+      },
+      {
+        type: 'exercise',
+        instruction: 'Play A natural minor: A3, B3, C4, D4, E4, F4, G4, A4',
+        expectedNotes: ['A3', 'B3', 'C4', 'D4', 'E4', 'F4', 'G4', 'A4'],
+      },
+    ],
+  },
 ]
 
 export function getLessonById(id: string): LessonDef | undefined {

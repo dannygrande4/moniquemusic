@@ -1,26 +1,38 @@
 import { Routes, Route } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, lazy, Suspense } from 'react'
 import { useUIStore } from '@/stores/uiStore'
 import AppShell from '@/components/layout/AppShell'
 import LevelUpOverlay from '@/components/Gamification/LevelUpOverlay'
-import Landing from '@/pages/Landing'
-import Onboarding from '@/pages/Onboarding'
-import Dashboard from '@/pages/Dashboard'
-import PlayBrowser from '@/pages/PlayBrowser'
-import PlayGame from '@/pages/PlayGame'
-import LearnDashboard from '@/pages/LearnDashboard'
-import LessonPage from '@/pages/LessonPage'
-import ChordExplorer from '@/pages/ChordExplorer'
-import ScaleExplorer from '@/pages/ScaleExplorer'
-import EarTraining from '@/pages/EarTraining'
-import PracticeSandbox from '@/pages/PracticeSandbox'
-import Profile from '@/pages/Profile'
-import Settings from '@/pages/Settings'
+
+// ── Lazy-loaded pages (code-split per route) ─────────────────────────────────
+const Landing = lazy(() => import('@/pages/Landing'))
+const Onboarding = lazy(() => import('@/pages/Onboarding'))
+const Dashboard = lazy(() => import('@/pages/Dashboard'))
+const PlayBrowser = lazy(() => import('@/pages/PlayBrowser'))
+const PlayGame = lazy(() => import('@/pages/PlayGame'))
+const LearnDashboard = lazy(() => import('@/pages/LearnDashboard'))
+const LessonPage = lazy(() => import('@/pages/LessonPage'))
+const ChordExplorer = lazy(() => import('@/pages/ChordExplorer'))
+const ScaleExplorer = lazy(() => import('@/pages/ScaleExplorer'))
+const EarTraining = lazy(() => import('@/pages/EarTraining'))
+const PracticeSandbox = lazy(() => import('@/pages/PracticeSandbox'))
+const Profile = lazy(() => import('@/pages/Profile'))
+const Settings = lazy(() => import('@/pages/Settings'))
+
+function PageLoading() {
+  return (
+    <div className="flex items-center justify-center h-64">
+      <div className="flex items-center gap-3 text-surface-400">
+        <div className="w-5 h-5 border-2 border-primary-400 border-t-transparent rounded-full animate-spin" />
+        Loading...
+      </div>
+    </div>
+  )
+}
 
 export default function App() {
   const { ageMode, highContrast, reducedMotion } = useUIStore()
 
-  // Apply age mode + accessibility as data attributes on <html>
   useEffect(() => {
     document.documentElement.setAttribute('data-age-mode', ageMode)
     document.documentElement.setAttribute('data-high-contrast', String(highContrast))
@@ -30,6 +42,7 @@ export default function App() {
   return (
     <>
     <LevelUpOverlay />
+    <Suspense fallback={<PageLoading />}>
     <Routes>
       {/* Public routes (no shell) */}
       <Route path="/" element={<Landing />} />
@@ -50,6 +63,7 @@ export default function App() {
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>
+    </Suspense>
     </>
   )
 }

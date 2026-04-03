@@ -170,3 +170,187 @@ export function generateSmokeOnTheWater(bpm = 112, numLanes = 4): { notes: NoteE
 
   return { notes, duration: 40 * beat }
 }
+
+/**
+ * Seven Nation Army — iconic bass riff
+ */
+export function generateSevenNationArmy(bpm = 120, numLanes = 4): { notes: NoteEvent[]; duration: number } {
+  const beat = 60 / bpm
+  // E E G E D C B (rhythmic)
+  const riff = [
+    { note: 'E3', lane: 0, time: 0 },
+    { note: 'E3', lane: 0, time: 2 },
+    { note: 'G3', lane: 1, time: 3 },
+    { note: 'E3', lane: 0, time: 4.5 },
+    { note: 'D3', lane: 0, time: 6 },
+    { note: 'C3', lane: 0, time: 7.5 },
+    { note: 'B2', lane: 1, time: 8 },
+    // repeat
+    { note: 'E3', lane: 0, time: 12 },
+    { note: 'E3', lane: 0, time: 14 },
+    { note: 'G3', lane: 1, time: 15 },
+    { note: 'E3', lane: 0, time: 16.5 },
+    { note: 'D3', lane: 0, time: 18 },
+    { note: 'C3', lane: 0, time: 19.5 },
+    { note: 'B2', lane: 1, time: 20 },
+    // variation
+    { note: 'E3', lane: 0, time: 24 },
+    { note: 'E3', lane: 0, time: 26 },
+    { note: 'G3', lane: 1, time: 27 },
+    { note: 'E3', lane: 0, time: 28.5 },
+    { note: 'D3', lane: 2, time: 30 },
+    { note: 'C3', lane: 2, time: 31.5 },
+    { note: 'D3', lane: 2, time: 32 },
+    { note: 'C3', lane: 2, time: 33 },
+    { note: 'B2', lane: 1, time: 34 },
+    { note: 'B2', lane: 1, time: 36 },
+  ]
+
+  const notes: NoteEvent[] = riff.map((r) => ({
+    note: r.note,
+    time: r.time * beat,
+    duration: beat * 1,
+    lane: r.lane,
+    velocity: 110,
+  }))
+
+  return { notes, duration: 38 * beat }
+}
+
+/**
+ * Twinkle Twinkle Little Star
+ */
+export function generateTwinkle(bpm = 90): { notes: NoteEvent[]; duration: number } {
+  const beat = 60 / bpm
+  const melody = [
+    // C C G G A A G - F F E E D D C
+    { note: 'C4', lane: 0 }, { note: 'C4', lane: 0 },
+    { note: 'G4', lane: 2 }, { note: 'G4', lane: 2 },
+    { note: 'A4', lane: 3 }, { note: 'A4', lane: 3 },
+    { note: 'G4', lane: 2 },
+    { note: 'F4', lane: 1 }, { note: 'F4', lane: 1 },
+    { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 },
+    { note: 'D4', lane: 0 }, { note: 'D4', lane: 0 },
+    { note: 'C4', lane: 0 },
+    // G G F F E E D
+    { note: 'G4', lane: 2 }, { note: 'G4', lane: 2 },
+    { note: 'F4', lane: 1 }, { note: 'F4', lane: 1 },
+    { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 },
+    { note: 'D4', lane: 0 },
+    // G G F F E E D
+    { note: 'G4', lane: 2 }, { note: 'G4', lane: 2 },
+    { note: 'F4', lane: 1 }, { note: 'F4', lane: 1 },
+    { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 },
+    { note: 'D4', lane: 0 },
+    // C C G G A A G - F F E E D D C
+    { note: 'C4', lane: 0 }, { note: 'C4', lane: 0 },
+    { note: 'G4', lane: 2 }, { note: 'G4', lane: 2 },
+    { note: 'A4', lane: 3 }, { note: 'A4', lane: 3 },
+    { note: 'G4', lane: 2 },
+    { note: 'F4', lane: 1 }, { note: 'F4', lane: 1 },
+    { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 },
+    { note: 'D4', lane: 0 }, { note: 'D4', lane: 0 },
+    { note: 'C4', lane: 0 },
+  ]
+
+  const notes: NoteEvent[] = melody.map((m, i) => ({
+    note: m.note,
+    time: i * beat,
+    duration: beat * 0.9,
+    lane: m.lane,
+    velocity: 90,
+  }))
+
+  return { notes, duration: (melody.length + 2) * beat }
+}
+
+/**
+ * Happy Birthday melody
+ */
+export function generateHappyBirthday(bpm = 100): { notes: NoteEvent[]; duration: number } {
+  const beat = 60 / bpm
+  const melody = [
+    { note: 'C4', lane: 0, dur: 0.75 },
+    { note: 'C4', lane: 0, dur: 0.25 },
+    { note: 'D4', lane: 0, dur: 1 },
+    { note: 'C4', lane: 0, dur: 1 },
+    { note: 'F4', lane: 1, dur: 1 },
+    { note: 'E4', lane: 1, dur: 2 },
+    { note: 'C4', lane: 0, dur: 0.75 },
+    { note: 'C4', lane: 0, dur: 0.25 },
+    { note: 'D4', lane: 0, dur: 1 },
+    { note: 'C4', lane: 0, dur: 1 },
+    { note: 'G4', lane: 2, dur: 1 },
+    { note: 'F4', lane: 1, dur: 2 },
+    { note: 'C4', lane: 0, dur: 0.75 },
+    { note: 'C4', lane: 0, dur: 0.25 },
+    { note: 'C5', lane: 3, dur: 1 },
+    { note: 'A4', lane: 3, dur: 1 },
+    { note: 'F4', lane: 1, dur: 1 },
+    { note: 'E4', lane: 1, dur: 1 },
+    { note: 'D4', lane: 0, dur: 2 },
+    { note: 'A#4', lane: 2, dur: 0.75 },
+    { note: 'A#4', lane: 2, dur: 0.25 },
+    { note: 'A4', lane: 3, dur: 1 },
+    { note: 'F4', lane: 1, dur: 1 },
+    { note: 'G4', lane: 2, dur: 1 },
+    { note: 'F4', lane: 1, dur: 2 },
+  ]
+
+  let time = 0
+  const notes: NoteEvent[] = melody.map((m) => {
+    const n: NoteEvent = {
+      note: m.note,
+      time: time * beat,
+      duration: m.dur * beat * 0.9,
+      lane: m.lane,
+      velocity: 95,
+    }
+    time += m.dur
+    return n
+  })
+
+  return { notes, duration: (time + 2) * beat }
+}
+
+/**
+ * La Bamba basic riff (C-F-G pattern)
+ */
+export function generateLaBamba(bpm = 130): { notes: NoteEvent[]; duration: number } {
+  const beat = 60 / bpm
+  // Simplified strumming pattern on C-F-G
+  const pattern = [
+    // Bar 1: C
+    { note: 'C4', lane: 0, time: 0 }, { note: 'E4', lane: 1, time: 0.5 },
+    { note: 'G4', lane: 2, time: 1 }, { note: 'C4', lane: 0, time: 1.5 },
+    // Bar 1: F
+    { note: 'F4', lane: 1, time: 2 }, { note: 'A4', lane: 3, time: 2.5 },
+    // Bar 1: G
+    { note: 'G4', lane: 2, time: 3 }, { note: 'B4', lane: 3, time: 3.5 },
+    // Bar 2: C
+    { note: 'C4', lane: 0, time: 4 }, { note: 'E4', lane: 1, time: 4.5 },
+    { note: 'G4', lane: 2, time: 5 }, { note: 'C4', lane: 0, time: 5.5 },
+    // Bar 2: F-G
+    { note: 'F4', lane: 1, time: 6 }, { note: 'A4', lane: 3, time: 6.5 },
+    { note: 'G4', lane: 2, time: 7 }, { note: 'B4', lane: 3, time: 7.5 },
+    // Repeat x2
+    { note: 'C4', lane: 0, time: 8 }, { note: 'E4', lane: 1, time: 8.5 },
+    { note: 'G4', lane: 2, time: 9 }, { note: 'C4', lane: 0, time: 9.5 },
+    { note: 'F4', lane: 1, time: 10 }, { note: 'A4', lane: 3, time: 10.5 },
+    { note: 'G4', lane: 2, time: 11 }, { note: 'B4', lane: 3, time: 11.5 },
+    { note: 'C4', lane: 0, time: 12 }, { note: 'E4', lane: 1, time: 12.5 },
+    { note: 'G4', lane: 2, time: 13 }, { note: 'C4', lane: 0, time: 13.5 },
+    { note: 'F4', lane: 1, time: 14 }, { note: 'A4', lane: 3, time: 14.5 },
+    { note: 'G4', lane: 2, time: 15 }, { note: 'B4', lane: 3, time: 15.5 },
+  ]
+
+  const notes: NoteEvent[] = pattern.map((r) => ({
+    note: r.note,
+    time: r.time * beat,
+    duration: beat * 0.8,
+    lane: r.lane,
+    velocity: 100,
+  }))
+
+  return { notes, duration: 17 * beat }
+}

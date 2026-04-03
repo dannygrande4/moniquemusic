@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import PianoKeyboard from '@/components/Piano/PianoKeyboard'
+import Tuner from '@/components/Tuner/Tuner'
 import InfoTooltip from '@/components/ui/InfoTooltip'
 
 export default function PracticeSandbox() {
@@ -192,6 +193,9 @@ export default function PracticeSandbox() {
           ))}
         </div>
       </div>
+
+      {/* Tuner */}
+      <Tuner />
 
       {/* Free play piano */}
       <div>

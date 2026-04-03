@@ -1,5 +1,13 @@
 import type { NoteEvent } from '@melodypath/shared-types'
-import { generateOdeToJoy, generateSmokeOnTheWater, generateDemoSong } from './midiParser'
+import {
+  generateOdeToJoy,
+  generateSmokeOnTheWater,
+  generateDemoSong,
+  generateSevenNationArmy,
+  generateTwinkle,
+  generateHappyBirthday,
+  generateLaBamba,
+} from './midiParser'
 
 export interface SongData {
   id: string
@@ -15,6 +23,17 @@ export interface SongData {
 
 export const SONG_LIBRARY: SongData[] = [
   {
+    id: 'twinkle',
+    title: 'Twinkle Twinkle Little Star',
+    artist: 'Traditional',
+    bpm: 90,
+    key: 'C',
+    difficulty: 1,
+    genre: 'Children',
+    concepts: ['melody', 'simple rhythm', 'repetition'],
+    getNotes: () => generateTwinkle(90),
+  },
+  {
     id: 'ode-to-joy',
     title: 'Ode to Joy',
     artist: 'Beethoven',
@@ -24,6 +43,39 @@ export const SONG_LIBRARY: SongData[] = [
     genre: 'Classical',
     concepts: ['melody', 'stepwise motion', 'quarter notes'],
     getNotes: () => generateOdeToJoy(100),
+  },
+  {
+    id: 'happy-birthday',
+    title: 'Happy Birthday',
+    artist: 'Traditional',
+    bpm: 100,
+    key: 'C',
+    difficulty: 1,
+    genre: 'Traditional',
+    concepts: ['melody', '3/4 feel', 'pickup notes'],
+    getNotes: () => generateHappyBirthday(100),
+  },
+  {
+    id: 'demo-pattern',
+    title: 'Practice Patterns',
+    artist: 'MelodyPath',
+    bpm: 120,
+    key: 'C',
+    difficulty: 1,
+    genre: 'Practice',
+    concepts: ['rhythm', 'coordination', 'timing'],
+    getNotes: () => generateDemoSong(120),
+  },
+  {
+    id: 'seven-nation-army',
+    title: 'Seven Nation Army',
+    artist: 'The White Stripes',
+    bpm: 120,
+    key: 'Em',
+    difficulty: 2,
+    genre: 'Rock',
+    concepts: ['riff', 'bass line', 'syncopation'],
+    getNotes: () => generateSevenNationArmy(120),
   },
   {
     id: 'smoke-on-the-water',
@@ -37,15 +89,15 @@ export const SONG_LIBRARY: SongData[] = [
     getNotes: () => generateSmokeOnTheWater(112),
   },
   {
-    id: 'demo-pattern',
-    title: 'Practice Patterns',
-    artist: 'MelodyPath',
-    bpm: 120,
+    id: 'la-bamba',
+    title: 'La Bamba',
+    artist: 'Ritchie Valens',
+    bpm: 130,
     key: 'C',
-    difficulty: 1,
-    genre: 'Practice',
-    concepts: ['rhythm', 'coordination', 'timing'],
-    getNotes: () => generateDemoSong(120),
+    difficulty: 3,
+    genre: 'Latin Rock',
+    concepts: ['I-IV-V', 'fast strumming', 'chord changes'],
+    getNotes: () => generateLaBamba(130),
   },
 ]
 
