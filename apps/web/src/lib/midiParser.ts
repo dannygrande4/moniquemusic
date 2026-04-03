@@ -354,3 +354,87 @@ export function generateLaBamba(bpm = 130): { notes: NoteEvent[]; duration: numb
 
   return { notes, duration: 17 * beat }
 }
+
+/**
+ * Mary Had a Little Lamb
+ */
+export function generateMaryLamb(bpm = 100): { notes: NoteEvent[]; duration: number } {
+  const beat = 60 / bpm
+  const melody = [
+    { note: 'E4', lane: 1 }, { note: 'D4', lane: 0 }, { note: 'C4', lane: 0 }, { note: 'D4', lane: 0 },
+    { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 },
+    { note: 'D4', lane: 0 }, { note: 'D4', lane: 0 }, { note: 'D4', lane: 0 },
+    { note: 'E4', lane: 1 }, { note: 'G4', lane: 2 }, { note: 'G4', lane: 2 },
+    { note: 'E4', lane: 1 }, { note: 'D4', lane: 0 }, { note: 'C4', lane: 0 }, { note: 'D4', lane: 0 },
+    { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 },
+    { note: 'D4', lane: 0 }, { note: 'D4', lane: 0 }, { note: 'E4', lane: 1 }, { note: 'D4', lane: 0 },
+    { note: 'C4', lane: 0 },
+  ]
+  const notes: NoteEvent[] = melody.map((m, i) => ({
+    note: m.note, time: i * beat, duration: beat * 0.9, lane: m.lane, velocity: 90,
+  }))
+  return { notes, duration: (melody.length + 2) * beat }
+}
+
+/**
+ * When The Saints Go Marching In (simplified)
+ */
+export function generateWhenTheSaints(bpm = 110): { notes: NoteEvent[]; duration: number } {
+  const beat = 60 / bpm
+  const melody = [
+    { note: 'C4', lane: 0 }, { note: 'E4', lane: 1 }, { note: 'F4', lane: 2 }, { note: 'G4', lane: 3 },
+    { note: 'C4', lane: 0 }, { note: 'E4', lane: 1 }, { note: 'F4', lane: 2 }, { note: 'G4', lane: 3 },
+    { note: 'C4', lane: 0 }, { note: 'E4', lane: 1 }, { note: 'F4', lane: 2 }, { note: 'G4', lane: 3 },
+    { note: 'E4', lane: 1 }, { note: 'C4', lane: 0 }, { note: 'E4', lane: 1 }, { note: 'D4', lane: 0 },
+    { note: 'E4', lane: 1 }, { note: 'E4', lane: 1 }, { note: 'D4', lane: 0 }, { note: 'C4', lane: 0 },
+    { note: 'C4', lane: 0 }, { note: 'E4', lane: 1 }, { note: 'G4', lane: 3 }, { note: 'G4', lane: 3 },
+    { note: 'F4', lane: 2 },
+    { note: 'E4', lane: 1 }, { note: 'F4', lane: 2 }, { note: 'G4', lane: 3 }, { note: 'E4', lane: 1 },
+    { note: 'C4', lane: 0 }, { note: 'D4', lane: 0 }, { note: 'C4', lane: 0 },
+  ]
+  const notes: NoteEvent[] = melody.map((m, i) => ({
+    note: m.note, time: i * beat, duration: beat * 0.9, lane: m.lane, velocity: 95,
+  }))
+  return { notes, duration: (melody.length + 2) * beat }
+}
+
+/**
+ * Für Elise opening theme
+ */
+export function generateFurElise(bpm = 85): { notes: NoteEvent[]; duration: number } {
+  const beat = 60 / bpm
+  const half = beat / 2
+  const melody = [
+    { note: 'E5', time: 0 }, { note: 'D#5', time: half },
+    { note: 'E5', time: half * 2 }, { note: 'D#5', time: half * 3 },
+    { note: 'E5', time: half * 4 }, { note: 'B4', time: half * 5 },
+    { note: 'D5', time: half * 6 }, { note: 'C5', time: half * 7 },
+    { note: 'A4', time: half * 8 },
+    // pause
+    { note: 'C4', time: half * 10 }, { note: 'E4', time: half * 11 },
+    { note: 'A4', time: half * 12 }, { note: 'B4', time: half * 13 },
+    // pause
+    { note: 'E4', time: half * 15 }, { note: 'G#4', time: half * 16 },
+    { note: 'B4', time: half * 17 }, { note: 'C5', time: half * 18 },
+    // repeat
+    { note: 'E5', time: half * 20 }, { note: 'D#5', time: half * 21 },
+    { note: 'E5', time: half * 22 }, { note: 'D#5', time: half * 23 },
+    { note: 'E5', time: half * 24 }, { note: 'B4', time: half * 25 },
+    { note: 'D5', time: half * 26 }, { note: 'C5', time: half * 27 },
+    { note: 'A4', time: half * 28 },
+  ]
+
+  const laneMap: Record<string, number> = {
+    'C4': 0, 'E4': 1, 'G#4': 2, 'A4': 3,
+    'B4': 2, 'C5': 3, 'D5': 1, 'D#5': 0, 'E5': 1,
+  }
+
+  const notes: NoteEvent[] = melody.map((m) => ({
+    note: m.note,
+    time: m.time,
+    duration: half * 0.9,
+    lane: laneMap[m.note] ?? 0,
+    velocity: 85,
+  }))
+  return { notes, duration: half * 30 + beat }
+}

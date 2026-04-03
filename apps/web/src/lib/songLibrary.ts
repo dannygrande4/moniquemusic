@@ -7,6 +7,9 @@ import {
   generateTwinkle,
   generateHappyBirthday,
   generateLaBamba,
+  generateMaryLamb,
+  generateWhenTheSaints,
+  generateFurElise,
 } from './midiParser'
 
 export interface SongData {
@@ -98,6 +101,39 @@ export const SONG_LIBRARY: SongData[] = [
     genre: 'Latin Rock',
     concepts: ['I-IV-V', 'fast strumming', 'chord changes'],
     getNotes: () => generateLaBamba(130),
+  },
+  {
+    id: 'mary-lamb',
+    title: 'Mary Had a Little Lamb',
+    artist: 'Traditional',
+    bpm: 100,
+    key: 'C',
+    difficulty: 1,
+    genre: 'Children',
+    concepts: ['melody', 'repetition', 'simple rhythm'],
+    getNotes: () => generateMaryLamb(100),
+  },
+  {
+    id: 'when-the-saints',
+    title: 'When The Saints Go Marching In',
+    artist: 'Traditional',
+    bpm: 110,
+    key: 'C',
+    difficulty: 2,
+    genre: 'Jazz/Spiritual',
+    concepts: ['melody', 'major key', 'syncopation'],
+    getNotes: () => generateWhenTheSaints(110),
+  },
+  {
+    id: 'fur-elise',
+    title: 'Für Elise',
+    artist: 'Beethoven',
+    bpm: 85,
+    key: 'Am',
+    difficulty: 3,
+    genre: 'Classical',
+    concepts: ['classical', 'chromatic', 'eighth notes'],
+    getNotes: () => generateFurElise(85),
   },
 ]
 

@@ -7,7 +7,7 @@ import InfoTooltip from '@/components/ui/InfoTooltip'
 
 // ─── Exercise types ──────────────────────────────────────────────────────────
 
-type ExerciseType = 'intervals' | 'chords'
+type ExerciseType = 'intervals' | 'chords' | 'melody' | 'rhythm'
 
 const INTERVALS = [
   { name: 'Minor 2nd', short: 'm2', interval: '2m' },
@@ -96,10 +96,130 @@ export default function EarTraining() {
     playFn()
   }, [ensureAudio, engine])
 
+  // ─── Melody dictation ────────────────────────────────────────────────
+
+  const [melodyNotes, setMelodyNotes] = useState<string[]>([])
+  const [melodyAnswer, setMelodyAnswer] = useState<string[]>([])
+  const [melodyTarget, setMelodyTarget] = useState<string[]>([])
+
+  const MELODY_NOTES = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4']
+
+  const generateMelody = useCallback(async () => {
+    await ensureAudio()
+    const len = 4
+    const melody: string[] = []
+    for (let i = 0; i < len; i++) {
+      melody.push(randomFrom(MELODY_NOTES))
+    }
+
+    setMelodyTarget(melody)
+    setMelodyAnswer([])
+    setFeedback(null)
+
+    const playFn = () => {
+      melody.forEach((note, i) => {
+        setTimeout(() => engine.playNote(note, '4n'), i * 500)
+      })
+    }
+
+    setCurrentQ({ answer: melody.join(' '), playFn })
+    playFn()
+  }, [ensureAudio, engine])
+
+  const handleMelodyNote = useCallback((note: string) => {
+    engine.playNote(note, '8n')
+    setMelodyAnswer((prev) => {
+      const next = [...prev, note]
+      if (next.length === melodyTarget.length) {
+        const correct = next.every((n, i) => n === melodyTarget[i])
+        setFeedback({ correct, answer: melodyTarget.join(' → ') })
+        setScore((s) => ({
+          correct: s.correct + (correct ? 1 : 0),
+          total: s.total + 1,
+        }))
+        if (correct) addXP(10)
+      }
+      return next
+    })
+  }, [engine, melodyTarget, addXP])
+
+  // ─── Rhythm tapping ─────────────────────────────────────────────────
+
+  const [rhythmPattern, setRhythmPattern] = useState<number[]>([])
+  const [rhythmTaps, setRhythmTaps] = useState<number[]>([])
+  const [rhythmStartTime, setRhythmStartTime] = useState(0)
+  const [rhythmPlaying, setRhythmPlaying] = useState(false)
+
+  const generateRhythm = useCallback(async () => {
+    await ensureAudio()
+    // Generate a 4-beat pattern with some syncopation
+    const bpm = 100
+    const beatMs = (60 / bpm) * 1000
+    const patterns = [
+      [0, 1, 2, 3],                    // straight quarter notes
+      [0, 1, 2, 3],
+      [0, 0.5, 1, 2, 3],              // with an eighth note
+      [0, 1, 1.5, 2, 3],
+      [0, 0.5, 1, 1.5, 2, 3],
+    ]
+    const pattern = randomFrom(patterns).map((b) => b * beatMs)
+
+    setRhythmPattern(pattern)
+    setRhythmTaps([])
+    setRhythmPlaying(false)
+    setFeedback(null)
+
+    const playFn = () => {
+      pattern.forEach((time) => {
+        setTimeout(() => engine.playNote('C5', '16n'), time)
+      })
+    }
+
+    setCurrentQ({ answer: `${pattern.length} beats`, playFn })
+    playFn()
+  }, [ensureAudio, engine])
+
+  const startRhythmTapping = useCallback(() => {
+    setRhythmTaps([])
+    setRhythmStartTime(Date.now())
+    setRhythmPlaying(true)
+
+    // Auto-stop after pattern duration + buffer
+    const duration = Math.max(...rhythmPattern) + 2000
+    setTimeout(() => {
+      setRhythmPlaying(false)
+      // Check will happen on stop
+    }, duration)
+  }, [rhythmPattern])
+
+  const handleRhythmTap = useCallback(() => {
+    if (!rhythmPlaying) return
+    engine.playNote('C5', '16n')
+    const tapTime = Date.now() - rhythmStartTime
+    setRhythmTaps((prev) => {
+      const next = [...prev, tapTime]
+      if (next.length === rhythmPattern.length) {
+        // Check accuracy: each tap should be within 150ms of the pattern beat
+        const tolerance = 150
+        const allClose = next.every((tap, i) => Math.abs(tap - rhythmPattern[i]) < tolerance)
+        setFeedback({ correct: allClose, answer: allClose ? 'Great rhythm!' : 'Try to match the beat pattern' })
+        setScore((s) => ({
+          correct: s.correct + (allClose ? 1 : 0),
+          total: s.total + 1,
+        }))
+        if (allClose) addXP(10)
+        setRhythmPlaying(false)
+      }
+      return next
+    })
+  }, [rhythmPlaying, rhythmStartTime, rhythmPattern, engine, addXP])
+
   const generateNew = useCallback(() => {
     if (exerciseType === 'intervals') generateInterval()
-    else generateChord()
-  }, [exerciseType, generateInterval, generateChord])
+    else if (exerciseType === 'chords') generateChord()
+    else if (exerciseType === 'melody') generateMelody()
+    else if (exerciseType === 'rhythm') generateRhythm()
+  }, [exerciseType, generateInterval, generateChord, generateMelody, generateRhythm])
 
   // ─── Answer check ───────────────────────────────────────────────────────
 
@@ -127,7 +247,8 @@ export default function EarTraining() {
 
   const options = useMemo(() => {
     if (exerciseType === 'intervals') return INTERVALS.map((i) => i.name)
-    return CHORD_TYPES.map((c) => c.name)
+    if (exerciseType === 'chords') return CHORD_TYPES.map((c) => c.name)
+    return [] // melody and rhythm have custom UI
   }, [exerciseType])
 
   const accuracy =
@@ -147,7 +268,7 @@ export default function EarTraining() {
       {/* Exercise type toggle */}
       <div className="flex items-center gap-3">
         <div className="flex bg-surface-100 rounded-lg p-1">
-        {(['intervals', 'chords'] as const).map((type) => (
+        {(['intervals', 'chords', 'melody', 'rhythm'] as const).map((type) => (
           <button
             key={type}
             onClick={() => {
@@ -168,9 +289,15 @@ export default function EarTraining() {
         </div>
         <InfoTooltip
           size="md"
-          text={exerciseType === 'intervals'
-            ? 'An interval is the distance between two notes. We\'ll play two notes — listen to the gap between them and pick the right name.'
-            : 'We\'ll play a chord (multiple notes at once). Listen to its overall mood: Major = happy/bright, Minor = sad/dark, Dim = tense, Aug = mysterious.'}
+          text={
+            exerciseType === 'intervals'
+              ? 'An interval is the distance between two notes. We\'ll play two notes — listen to the gap between them and pick the right name.'
+              : exerciseType === 'chords'
+                ? 'We\'ll play a chord (multiple notes at once). Listen to its overall mood: Major = happy/bright, Minor = sad/dark, Dim = tense, Aug = mysterious.'
+                : exerciseType === 'melody'
+                  ? 'We\'ll play a 4-note melody. Listen carefully, then click the piano keys to recreate it note by note. +10 XP for a perfect match!'
+                  : 'We\'ll play a rhythm pattern. Listen, then tap the spacebar (or the Tap button) to reproduce the same rhythm. +10 XP for accurate timing!'
+          }
         />
       </div>
 
@@ -228,8 +355,8 @@ export default function EarTraining() {
         </div>
       )}
 
-      {/* Answer options */}
-      {currentQ && !feedback && (
+      {/* Answer options — interval / chord mode */}
+      {currentQ && !feedback && (exerciseType === 'intervals' || exerciseType === 'chords') && (
         <div>
           <h2 className="text-sm font-semibold text-surface-500 mb-3">What do you hear?</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -243,6 +370,95 @@ export default function EarTraining() {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Melody dictation UI */}
+      {currentQ && !feedback && exerciseType === 'melody' && (
+        <div>
+          <h2 className="text-sm font-semibold text-surface-500 mb-3">
+            Recreate the melody — click the notes in order ({melodyAnswer.length}/{melodyTarget.length})
+          </h2>
+          {/* Progress */}
+          <div className="flex gap-1 mb-4">
+            {melodyTarget.map((_, i) => (
+              <div
+                key={i}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
+                  i < melodyAnswer.length
+                    ? melodyAnswer[i] === melodyTarget[i]
+                      ? 'bg-timing-perfect text-white'
+                      : 'bg-timing-miss text-white'
+                    : 'bg-surface-100 text-surface-400'
+                }`}
+              >
+                {i < melodyAnswer.length ? melodyAnswer[i].replace(/\d/, '') : '?'}
+              </div>
+            ))}
+          </div>
+          {/* Note buttons */}
+          <div className="flex gap-2 flex-wrap">
+            {MELODY_NOTES.map((note) => (
+              <button
+                key={note}
+                onClick={() => handleMelodyNote(note)}
+                className="w-12 h-12 bg-white border border-surface-200 rounded-xl text-sm font-bold text-surface-700 hover:border-primary-400 hover:bg-primary-50 transition-colors"
+              >
+                {note.replace(/\d/, '')}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Rhythm tapping UI */}
+      {currentQ && exerciseType === 'rhythm' && (
+        <div className="text-center space-y-4">
+          <h2 className="text-sm font-semibold text-surface-500">
+            {rhythmPlaying
+              ? `Tap! (${rhythmTaps.length}/${rhythmPattern.length})`
+              : feedback
+                ? ''
+                : 'Press "Tap Along" then tap the rhythm'}
+          </h2>
+
+          {/* Visual beat indicators */}
+          <div className="flex justify-center gap-2">
+            {rhythmPattern.map((_, i) => (
+              <div
+                key={i}
+                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold transition-all ${
+                  i < rhythmTaps.length
+                    ? 'bg-primary-500 border-primary-500 text-white scale-110'
+                    : 'border-surface-200 text-surface-400'
+                }`}
+              >
+                {i + 1}
+              </div>
+            ))}
+          </div>
+
+          {!feedback && (
+            <div className="flex gap-3 justify-center">
+              {!rhythmPlaying ? (
+                <button
+                  onClick={startRhythmTapping}
+                  className="px-8 py-4 bg-accent-500 text-white font-bold text-lg rounded-xl hover:bg-accent-600 transition-colors"
+                >
+                  Tap Along
+                </button>
+              ) : (
+                <button
+                  onClick={handleRhythmTap}
+                  onKeyDown={(e) => { if (e.code === 'Space') { e.preventDefault(); handleRhythmTap() } }}
+                  className="px-12 py-6 bg-primary-600 text-white font-bold text-xl rounded-2xl hover:bg-primary-700 active:scale-95 transition-all"
+                  autoFocus
+                >
+                  TAP
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
 
