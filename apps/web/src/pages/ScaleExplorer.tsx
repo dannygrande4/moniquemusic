@@ -4,7 +4,14 @@ import GuitarFretboard from '@/components/Guitar/GuitarFretboard'
 import { scaleToFretNotes } from '@/lib/scalePositions'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
+import InfoTooltip from '@/components/ui/InfoTooltip'
 import { getScale, getScaleNotes } from '@melodypath/music-theory'
+
+const SPEED_PRESETS = [
+  { label: 'Slow', ms: 500 },
+  { label: 'Medium', ms: 300 },
+  { label: 'Fast', ms: 150 },
+]
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 
@@ -30,6 +37,7 @@ export default function ScaleExplorer() {
   const [scaleType, setScaleType] = useState('major')
   const [activeNotes, setActiveNotes] = useState<string[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
+  const [speed, setSpeed] = useState(300) // ms between notes
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
   // Get scale info
@@ -92,13 +100,12 @@ export default function ScaleExplorer() {
 
     // Play ascending scale
     const notes = scaleNotesOctave.length > 0 ? scaleNotesOctave : []
-    const noteInterval = 300 // ms between notes
 
     notes.forEach((note, i) => {
       const t = setTimeout(() => {
         engine.playNote(note, '8n')
         setActiveNotes([note])
-      }, i * noteInterval)
+      }, i * speed)
       timeoutsRef.current.push(t)
     })
 
@@ -106,9 +113,9 @@ export default function ScaleExplorer() {
     const endT = setTimeout(() => {
       setActiveNotes([])
       setIsPlaying(false)
-    }, notes.length * noteInterval + 200)
+    }, notes.length * speed + 200)
     timeoutsRef.current.push(endT)
-  }, [ensureAudio, engine, scaleNotesOctave, isPlaying])
+  }, [ensureAudio, engine, scaleNotesOctave, isPlaying, speed])
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-8">
@@ -162,6 +169,29 @@ export default function ScaleExplorer() {
           </div>
         </div>
 
+        {/* Speed control */}
+        <div>
+          <label className="flex items-center text-xs font-medium text-surface-500 mb-1.5">
+            Playback Speed
+            <InfoTooltip text="Controls how fast the scale notes play. Slow it down to hear each note clearly, or speed it up to hear the overall sound." />
+          </label>
+          <div className="flex gap-1">
+            {SPEED_PRESETS.map((preset) => (
+              <button
+                key={preset.label}
+                onClick={() => setSpeed(preset.ms)}
+                className={`px-3 h-9 text-sm font-medium rounded-lg transition-colors ${
+                  speed === preset.ms
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-white border border-surface-200 text-surface-700 hover:bg-surface-50'
+                }`}
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Play button */}
         <button
           onClick={playScale}
@@ -176,11 +206,17 @@ export default function ScaleExplorer() {
       {scaleInfo && (
         <div className="bg-white rounded-xl border border-surface-200 p-5 flex flex-wrap gap-8">
           <div>
-            <div className="text-xs text-surface-500 mb-1">Scale</div>
+            <div className="flex items-center text-xs text-surface-500 mb-1">
+              Scale
+              <InfoTooltip text="A scale is a set of notes arranged in order by pitch. Different scales create different moods and feelings." />
+            </div>
             <div className="text-3xl font-bold text-surface-900">{root} {scaleType}</div>
           </div>
           <div>
-            <div className="text-xs text-surface-500 mb-1">Notes</div>
+            <div className="flex items-center text-xs text-surface-500 mb-1">
+              Notes
+              <InfoTooltip text="These are the individual notes that make up this scale. The root (blue) is the 'home' note the scale is built from." />
+            </div>
             <div className="flex gap-2 mt-1">
               {scaleInfo.notes.map((n, i) => {
                 const roles: NoteRole[] = ['root', 'other', 'third', 'other', 'fifth', 'other', 'seventh']
@@ -204,7 +240,10 @@ export default function ScaleExplorer() {
             </div>
           </div>
           <div>
-            <div className="text-xs text-surface-500 mb-1">Formula</div>
+            <div className="flex items-center text-xs text-surface-500 mb-1">
+              Formula
+              <InfoTooltip text="The interval formula shows the distance between each note. '1P' = root, '2M' = whole step, '3M' = major third, etc. This pattern is what gives each scale its unique character." />
+            </div>
             <div className="text-sm text-surface-700 font-mono mt-1">
               {scaleInfo.degrees.join(' ')}
             </div>

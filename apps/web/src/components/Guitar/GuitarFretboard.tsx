@@ -23,8 +23,10 @@ interface GuitarFretboardProps {
   onNotePlay?: (note: string) => void
   /** Show fret numbers */
   showFretNumbers?: boolean
-  /** Show note name labels in dots */
+  /** Show labels in dots */
   showLabels?: boolean
+  /** What to display in the dot labels: 'notes' for pitch names, 'fingers' for finger numbers */
+  labelMode?: 'notes' | 'fingers'
   /** Tuning: array of 6 note names from low to high E (default standard) */
   tuning?: string[]
 }
@@ -65,6 +67,7 @@ export default function GuitarFretboard({
   onNotePlay,
   showFretNumbers = true,
   showLabels = true,
+  labelMode = 'notes',
   tuning = STANDARD_TUNING,
 }: GuitarFretboardProps) {
   const activeSet = useMemo(() => new Set(activeNotes), [activeNotes])
@@ -228,14 +231,43 @@ export default function GuitarFretboard({
               onClick={() => handleClick(stringNum, fret)}
               className="cursor-pointer"
             >
+              {/* Active glow ring */}
+              {isActive && (
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={16}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth={3}
+                  opacity={0.5}
+                >
+                  <animate
+                    attributeName="r"
+                    from="12"
+                    to="18"
+                    dur="0.4s"
+                    repeatCount="indefinite"
+                    fill="freeze"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.6"
+                    to="0"
+                    dur="0.4s"
+                    repeatCount="indefinite"
+                    fill="freeze"
+                  />
+                </circle>
+              )}
               <circle
                 cx={cx}
                 cy={cy}
-                r={10}
-                fill={isActive ? color : color}
-                opacity={isActive ? 1 : 0.85}
+                r={isActive ? 12 : 10}
+                fill={color}
+                opacity={1}
                 stroke="white"
-                strokeWidth={2}
+                strokeWidth={isActive ? 3 : 2}
               />
               {showLabels && (
                 <text
@@ -243,12 +275,14 @@ export default function GuitarFretboard({
                   y={cy + 3.5}
                   textAnchor="middle"
                   fill="white"
-                  fontSize={9}
+                  fontSize={isActive ? 10 : 9}
                   fontWeight="bold"
                   fontFamily="Inter, sans-serif"
                   pointerEvents="none"
                 >
-                  {fretNote.finger ?? fretNote.note}
+                  {labelMode === 'fingers' && fretNote.finger
+                    ? fretNote.finger
+                    : fretNote.note}
                 </text>
               )}
             </g>

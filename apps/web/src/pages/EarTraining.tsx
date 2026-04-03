@@ -3,6 +3,7 @@ import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import { useUserStore } from '@/stores/userStore'
 import { transposeNote, getChordNotes } from '@melodypath/music-theory'
+import InfoTooltip from '@/components/ui/InfoTooltip'
 
 // ─── Exercise types ──────────────────────────────────────────────────────────
 
@@ -144,7 +145,8 @@ export default function EarTraining() {
       </div>
 
       {/* Exercise type toggle */}
-      <div className="flex bg-surface-100 rounded-lg p-1 w-fit">
+      <div className="flex items-center gap-3">
+        <div className="flex bg-surface-100 rounded-lg p-1">
         {(['intervals', 'chords'] as const).map((type) => (
           <button
             key={type}
@@ -163,6 +165,13 @@ export default function EarTraining() {
             {type}
           </button>
         ))}
+        </div>
+        <InfoTooltip
+          size="md"
+          text={exerciseType === 'intervals'
+            ? 'An interval is the distance between two notes. We\'ll play two notes — listen to the gap between them and pick the right name.'
+            : 'We\'ll play a chord (multiple notes at once). Listen to its overall mood: Major = happy/bright, Minor = sad/dark, Dim = tense, Aug = mysterious.'}
+        />
       </div>
 
       {/* Score bar */}

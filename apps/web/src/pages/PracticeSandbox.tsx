@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import PianoKeyboard from '@/components/Piano/PianoKeyboard'
+import InfoTooltip from '@/components/ui/InfoTooltip'
 
 export default function PracticeSandbox() {
   const { ensureAudio } = useAudioInit()
@@ -97,7 +98,14 @@ export default function PracticeSandbox() {
 
       {/* Metronome section */}
       <div className="bg-white rounded-xl border border-surface-200 p-6 space-y-5">
-        <h2 className="text-lg font-bold text-surface-900">Metronome</h2>
+        <h2 className="flex items-center text-lg font-bold text-surface-900">
+          Metronome
+          <InfoTooltip
+            size="md"
+            text="A metronome keeps a steady beat at a specific speed (BPM = Beats Per Minute). Practicing with a metronome helps you develop solid timing and rhythm."
+            detail="The highlighted beat shows beat 1 (the downbeat) in amber — this is the strongest beat in each measure."
+          />
+        </h2>
 
         {/* Visual beat display */}
         <div className="flex items-center justify-center gap-4">

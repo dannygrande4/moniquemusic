@@ -11,28 +11,32 @@ export interface HighlightedNote {
 }
 
 interface PianoKeyboardProps {
-  /** Starting octave (default 3) */
   startOctave?: number
-  /** Number of octaves to display (default 2) */
   octaves?: number
-  /** Notes to highlight with colored dots */
   highlightedNotes?: HighlightedNote[]
-  /** Active/pressed notes (shown as fully colored) */
   activeNotes?: string[]
-  /** Called when a key is clicked */
   onNotePlay?: (note: string) => void
-  /** Called when mouse/touch releases a key */
   onNoteRelease?: (note: string) => void
-  /** Show note labels on keys */
   showLabels?: boolean
-  /** Compact mode (smaller keys) */
   compact?: boolean
 }
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
+// White keys: C D E F G A B (indices 0,2,4,5,7,9,11)
+// Black keys: C# D# F# G# A# (indices 1,3,6,8,10)
+const WHITE_NOTE_INDICES = [0, 2, 4, 5, 7, 9, 11] as const
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'] as const
-const BLACK_KEYS = new Set([1, 3, 6, 8, 10]) // indices of sharps/flats in NOTE_NAMES
+
+// Which white keys have a black key to their RIGHT
+// C→C#, D→D#, F→F#, G→G#, A→A#
+const WHITE_WITH_BLACK_RIGHT: Record<number, number> = {
+  0: 1,   // C → C#
+  2: 3,   // D → D#
+  5: 6,   // F → F#
+  7: 8,   // G → G#
+  9: 10,  // A → A#
+}
 
 const ROLE_COLORS: Record<NoteRole, string> = {
   root: 'bg-note-root',
@@ -50,95 +54,6 @@ const ROLE_RING_COLORS: Record<NoteRole, string> = {
   other: 'ring-note-other',
 }
 
-// ─── Key component ───────────────────────────────────────────────────────────
-
-interface KeyProps {
-  note: string
-  isBlack: boolean
-  isActive: boolean
-  highlight?: HighlightedNote
-  showLabel: boolean
-  compact: boolean
-  onPlay: (note: string) => void
-  onRelease: (note: string) => void
-}
-
-function PianoKey({ note, isBlack, isActive, highlight, showLabel, compact, onPlay, onRelease }: KeyProps) {
-  const handlePointerDown = useCallback(() => onPlay(note), [note, onPlay])
-  const handlePointerUp = useCallback(() => onRelease(note), [note, onRelease])
-  const handlePointerLeave = useCallback(() => onRelease(note), [note, onRelease])
-
-  const baseHeight = compact ? 'h-28' : 'h-40'
-  const blackHeight = compact ? 'h-16' : 'h-24'
-  const baseWidth = compact ? 'w-8' : 'w-12'
-  const blackWidth = compact ? 'w-5' : 'w-8'
-
-  const pitchClass = note.replace(/\d/, '')
-  const label = showLabel ? pitchClass : null
-
-  if (isBlack) {
-    return (
-      <button
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerLeave}
-        className={cn(
-          'absolute z-10 rounded-b-md border border-surface-900 transition-colors select-none',
-          blackWidth,
-          blackHeight,
-          isActive
-            ? 'bg-primary-600 border-primary-700'
-            : highlight
-              ? `${ROLE_COLORS[highlight.role ?? 'other']} opacity-90`
-              : 'bg-surface-900 hover:bg-surface-800',
-        )}
-        style={{ marginLeft: compact ? '-10px' : '-16px' }}
-        aria-label={note}
-      >
-        {highlight && (
-          <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white/60" />
-        )}
-      </button>
-    )
-  }
-
-  return (
-    <button
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerLeave}
-      className={cn(
-        'relative border border-surface-200 rounded-b-lg transition-colors select-none flex flex-col items-center justify-end pb-2',
-        baseWidth,
-        baseHeight,
-        isActive
-          ? 'bg-primary-100 border-primary-400'
-          : highlight
-            ? `bg-white ring-2 ring-inset ${ROLE_RING_COLORS[highlight.role ?? 'other']}`
-            : 'bg-white hover:bg-surface-50',
-      )}
-      aria-label={note}
-    >
-      {highlight && (
-        <span
-          className={cn(
-            'w-4 h-4 rounded-full mb-1',
-            ROLE_COLORS[highlight.role ?? 'other'],
-          )}
-        />
-      )}
-      {label && (
-        <span className={cn(
-          'text-[10px] font-medium',
-          isActive ? 'text-primary-700' : 'text-surface-400',
-        )}>
-          {label}
-        </span>
-      )}
-    </button>
-  )
-}
-
 // ─── Piano Keyboard ──────────────────────────────────────────────────────────
 
 export default function PianoKeyboard({
@@ -153,55 +68,137 @@ export default function PianoKeyboard({
 }: PianoKeyboardProps) {
   const highlightMap = useMemo(() => {
     const map = new Map<string, HighlightedNote>()
-    for (const h of highlightedNotes) {
-      map.set(h.note, h)
-    }
+    for (const h of highlightedNotes) map.set(h.note, h)
     return map
   }, [highlightedNotes])
 
   const activeSet = useMemo(() => new Set(activeNotes), [activeNotes])
 
-  const handlePlay = useCallback(
-    (note: string) => onNotePlay?.(note),
-    [onNotePlay],
-  )
+  const handlePlay = useCallback((note: string) => onNotePlay?.(note), [onNotePlay])
+  const handleRelease = useCallback((note: string) => onNoteRelease?.(note), [onNoteRelease])
 
-  const handleRelease = useCallback(
-    (note: string) => onNoteRelease?.(note),
-    [onNoteRelease],
-  )
+  // Sizing
+  const wKeyW = compact ? 36 : 48   // px
+  const wKeyH = compact ? 112 : 160
+  const bKeyW = compact ? 24 : 32
+  const bKeyH = compact ? 64 : 96
 
-  // Build the list of keys
-  const keys: { note: string; isBlack: boolean }[] = useMemo(() => {
-    const result: { note: string; isBlack: boolean }[] = []
+  // Build white key + optional black key pairs
+  type KeyPair = {
+    white: { note: string; noteIdx: number }
+    black?: { note: string }
+  }
+
+  const keyPairs: KeyPair[] = useMemo(() => {
+    const result: KeyPair[] = []
     for (let oct = startOctave; oct < startOctave + octaves; oct++) {
-      for (let i = 0; i < 12; i++) {
-        result.push({
-          note: `${NOTE_NAMES[i]}${oct}`,
-          isBlack: BLACK_KEYS.has(i),
-        })
+      for (const wIdx of WHITE_NOTE_INDICES) {
+        const whiteNote = `${NOTE_NAMES[wIdx]}${oct}`
+        const pair: KeyPair = { white: { note: whiteNote, noteIdx: wIdx } }
+
+        const bIdx = WHITE_WITH_BLACK_RIGHT[wIdx]
+        if (bIdx !== undefined) {
+          pair.black = { note: `${NOTE_NAMES[bIdx]}${oct}` }
+        }
+        result.push(pair)
       }
     }
-    // Add final C
-    result.push({ note: `C${startOctave + octaves}`, isBlack: false })
+    // Final C
+    result.push({ white: { note: `C${startOctave + octaves}`, noteIdx: 0 } })
     return result
   }, [startOctave, octaves])
 
   return (
-    <div className="inline-flex relative select-none" role="group" aria-label="Piano keyboard">
-      {keys.map(({ note, isBlack }) => (
-        <PianoKey
-          key={note}
-          note={note}
-          isBlack={isBlack}
-          isActive={activeSet.has(note)}
-          highlight={highlightMap.get(note)}
-          showLabel={showLabels}
-          compact={compact}
-          onPlay={handlePlay}
-          onRelease={handleRelease}
-        />
-      ))}
+    <div
+      className="inline-flex relative select-none"
+      role="group"
+      aria-label="Piano keyboard"
+    >
+      {keyPairs.map(({ white, black }) => {
+        const wNote = white.note
+        const wActive = activeSet.has(wNote)
+        const wHighlight = highlightMap.get(wNote)
+        const wPitchClass = wNote.replace(/\d/, '')
+
+        return (
+          <div key={wNote} className="relative" style={{ width: wKeyW }}>
+            {/* White key */}
+            <button
+              onPointerDown={() => handlePlay(wNote)}
+              onPointerUp={() => handleRelease(wNote)}
+              onPointerLeave={() => handleRelease(wNote)}
+              className={cn(
+                'border border-surface-200 rounded-b-lg transition-all duration-75 select-none flex flex-col items-center justify-end pb-2 w-full',
+                wActive
+                  ? 'bg-primary-200 border-primary-500 shadow-[0_0_16px_rgba(79,110,247,0.5)]'
+                  : wHighlight
+                    ? `bg-white ring-2 ring-inset ${ROLE_RING_COLORS[wHighlight.role ?? 'other']}`
+                    : 'bg-white hover:bg-surface-50',
+              )}
+              style={{ height: wKeyH }}
+              aria-label={wNote}
+            >
+              {/* Colored dot */}
+              {(wHighlight || wActive) && (
+                <span
+                  className={cn(
+                    'rounded-full mb-1 transition-transform',
+                    wActive ? 'w-6 h-6 shadow-lg scale-110' : 'w-5 h-5',
+                    wActive ? 'bg-primary-500' : ROLE_COLORS[wHighlight?.role ?? 'other'],
+                  )}
+                />
+              )}
+              {/* Label */}
+              {showLabels && (
+                <span className={cn(
+                  'text-[10px] font-medium',
+                  wActive ? 'text-primary-700' : 'text-surface-400',
+                )}>
+                  {wPitchClass}
+                </span>
+              )}
+            </button>
+
+            {/* Black key — positioned at the right edge of this white key */}
+            {black && (() => {
+              const bNote = black.note
+              const bActive = activeSet.has(bNote)
+              const bHighlight = highlightMap.get(bNote)
+
+              return (
+                <button
+                  key={bNote}
+                  onPointerDown={() => handlePlay(bNote)}
+                  onPointerUp={() => handleRelease(bNote)}
+                  onPointerLeave={() => handleRelease(bNote)}
+                  className={cn(
+                    'absolute top-0 z-10 rounded-b-md border border-surface-900 transition-all duration-75 select-none flex flex-col items-center justify-end pb-1',
+                    bActive
+                      ? 'bg-primary-400 border-primary-500 shadow-[0_0_12px_rgba(79,110,247,0.7)]'
+                      : bHighlight
+                        ? `${ROLE_COLORS[bHighlight.role ?? 'other']} border-transparent`
+                        : 'bg-surface-900 hover:bg-surface-800',
+                  )}
+                  style={{
+                    width: bKeyW,
+                    height: bKeyH,
+                    right: -(bKeyW / 2),
+                  }}
+                  aria-label={bNote}
+                >
+                  {/* Dot */}
+                  {(bHighlight || bActive) && (
+                    <span className={cn(
+                      'rounded-full bg-white mb-0.5',
+                      bActive ? 'w-3.5 h-3.5 opacity-90' : 'w-3 h-3 opacity-70',
+                    )} />
+                  )}
+                </button>
+              )
+            })()}
+          </div>
+        )
+      })}
     </div>
   )
 }

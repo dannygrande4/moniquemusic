@@ -4,6 +4,7 @@ import GuitarFretboard from '@/components/Guitar/GuitarFretboard'
 import { chordShapeToFretNotes, getAvailableChordShapes } from '@/lib/chordShapes'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
+import InfoTooltip from '@/components/ui/InfoTooltip'
 import {
   getChord,
   getChordNotes,
@@ -36,6 +37,9 @@ export default function ChordExplorer() {
   const [mode, setMode] = useState<Mode>('explore')
   const [tryItNotes, setTryItNotes] = useState<string[]>([])
   const [identifiedChord, setIdentifiedChord] = useState<string | null>(null)
+
+  // Guitar display mode
+  const [guitarLabelMode, setGuitarLabelMode] = useState<'notes' | 'fingers'>('fingers')
 
   // Build the chord name for display and guitar lookup
   const chordName = useMemo(() => {
@@ -241,7 +245,10 @@ export default function ChordExplorer() {
             <div className="text-3xl font-bold text-surface-900">{chordInfo.name || chordName}</div>
           </div>
           <div>
-            <div className="text-xs text-surface-500 mb-1">Notes</div>
+            <div className="flex items-center text-xs text-surface-500 mb-1">
+              Notes
+              <InfoTooltip text="The individual notes that make up this chord. Blue = root (the chord's home note), Green = 3rd (gives it major/minor quality), Amber = 5th (adds fullness), Purple = 7th (adds color/tension)." />
+            </div>
             <div className="flex gap-2 mt-1">
               {chordInfo.notes.map((n, i) => {
                 const roles: NoteRole[] = ['root', 'third', 'fifth', 'seventh', 'other']
@@ -265,13 +272,19 @@ export default function ChordExplorer() {
             </div>
           </div>
           <div>
-            <div className="text-xs text-surface-500 mb-1">Intervals</div>
+            <div className="flex items-center text-xs text-surface-500 mb-1">
+              Intervals
+              <InfoTooltip text="Intervals describe the distance between the root and each other note. '1P' = unison (root), '3M' = major third, '5P' = perfect fifth. These intervals determine the chord's sound." />
+            </div>
             <div className="text-sm text-surface-700 font-mono mt-1">
               {chordInfo.intervals.join(' ')}
             </div>
           </div>
           <div>
-            <div className="text-xs text-surface-500 mb-1">Type</div>
+            <div className="flex items-center text-xs text-surface-500 mb-1">
+              Type
+              <InfoTooltip text="The chord type describes its overall quality — major sounds bright/happy, minor sounds dark/sad, diminished sounds tense, augmented sounds mysterious." />
+            </div>
             <div className="text-sm text-surface-700 mt-1 capitalize">{chordInfo.type}</div>
           </div>
         </div>
@@ -304,12 +317,38 @@ export default function ChordExplorer() {
       {/* Guitar */}
       {mode === 'explore' && (
         <div>
-          <h2 className="text-sm font-semibold text-surface-500 mb-3">
-            Guitar
-            {!guitarShapeKey && (
-              <span className="ml-2 text-xs font-normal text-surface-400">(no shape for this chord yet)</span>
-            )}
-          </h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="flex items-center text-sm font-semibold text-surface-500">
+              Guitar
+              <InfoTooltip text="The dots show where to place your fingers on the fretboard. Toggle between seeing finger numbers (1=index, 2=middle, 3=ring, 4=pinky) or the actual note names." />
+              {!guitarShapeKey && (
+                <span className="ml-2 text-xs font-normal text-surface-400">(no shape for this chord yet)</span>
+              )}
+            </h2>
+            {/* Fingers / Notes toggle */}
+            <div className="flex bg-surface-100 rounded-lg p-0.5">
+              <button
+                onClick={() => setGuitarLabelMode('fingers')}
+                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                  guitarLabelMode === 'fingers'
+                    ? 'bg-white text-surface-900 shadow-sm'
+                    : 'text-surface-500'
+                }`}
+              >
+                Fingers
+              </button>
+              <button
+                onClick={() => setGuitarLabelMode('notes')}
+                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                  guitarLabelMode === 'notes'
+                    ? 'bg-white text-surface-900 shadow-sm'
+                    : 'text-surface-500'
+                }`}
+              >
+                Notes
+              </button>
+            </div>
+          </div>
           <div className="bg-white rounded-xl border border-surface-200 p-4">
             <GuitarFretboard
               frets={5}
@@ -317,6 +356,7 @@ export default function ChordExplorer() {
               activeNotes={activeNotes}
               onNotePlay={handleGuitarNote}
               showLabels
+              labelMode={guitarLabelMode}
             />
           </div>
         </div>
