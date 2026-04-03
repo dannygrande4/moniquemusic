@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { useEffect, lazy, Suspense } from 'react'
 import { useUIStore } from '@/stores/uiStore'
 import { useAuthStore } from '@/stores/authStore'
+import { useAuthSync } from '@/hooks/useAuthSync'
 import AppShell from '@/components/layout/AppShell'
 import LevelUpOverlay from '@/components/Gamification/LevelUpOverlay'
 
@@ -38,10 +39,24 @@ export default function App() {
   const { ageMode, highContrast, reducedMotion } = useUIStore()
   const initAuth = useAuthStore((s) => s.initialize)
 
+  // One-time: clear old anonymous progress on first load after this update
+  useEffect(() => {
+    const migrationKey = 'melodypath-auth-migration-v1'
+    if (!localStorage.getItem(migrationKey)) {
+      // Clear all old non-user-scoped data
+      const keysToRemove = ['melodypath-user', 'melodypath-lessons', 'melodypath-leaderboard', 'melodypath-ear-training']
+      for (const key of keysToRemove) localStorage.removeItem(key)
+      localStorage.setItem(migrationKey, '1')
+    }
+  }, [])
+
   // Initialize Supabase auth session on mount
   useEffect(() => {
     initAuth()
   }, [initAuth])
+
+  // Sync stores with authenticated user (reset on logout, load on login)
+  useAuthSync()
 
   useEffect(() => {
     document.documentElement.setAttribute('data-age-mode', ageMode)
