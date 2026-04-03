@@ -6,7 +6,7 @@ export type PitchCallback = (result: PitchResult | null) => void
 
 /**
  * Real-time pitch detection from microphone using pitchfinder (YIN algorithm).
- * Emits detected pitch via callback when confidence is above threshold.
+ * Tuned for guitar: handles low E (82 Hz) through high frets.
  */
 export class PitchDetector {
   private audioContext: AudioContext | null = null
@@ -15,22 +15,35 @@ export class PitchDetector {
   private animationFrame: number | null = null
   private detect: ((buffer: Float32Array) => number | null) | null = null
   private callback: PitchCallback | null = null
-  private readonly confidenceThreshold = 0.8
+  private readonly confidenceThreshold = 0.5  // lowered for acoustic mic pickup
   private readonly sampleRate = 44100
 
   async start(callback: PitchCallback): Promise<void> {
     this.callback = callback
 
-    this.stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    this.stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: false,   // disable — interferes with pitch detection
+        noiseSuppression: false,   // disable — can filter out guitar signal
+        autoGainControl: true,     // keep — helps with quiet acoustic guitars
+      },
+      video: false,
+    })
     this.audioContext = new AudioContext({ sampleRate: this.sampleRate })
 
     this.analyser = this.audioContext.createAnalyser()
-    this.analyser.fftSize = 2048
+    // Larger FFT for better low-frequency resolution
+    // 4096 at 44100 Hz gives us resolution down to ~10 Hz
+    this.analyser.fftSize = 4096
+    this.analyser.smoothingTimeConstant = 0.3
 
     const source = this.audioContext.createMediaStreamSource(this.stream)
     source.connect(this.analyser)
 
-    this.detect = YIN({ sampleRate: this.sampleRate })
+    this.detect = YIN({
+      sampleRate: this.sampleRate,
+      threshold: 0.15,  // more sensitive (default is 0.2)
+    })
     this.loop()
   }
 
@@ -42,7 +55,9 @@ export class PitchDetector {
 
     const frequency = this.detect(buffer)
 
-    if (frequency && frequency > 50 && frequency < 5000) {
+    // Guitar range: low E2 = 82 Hz, high E6 = 1318 Hz
+    // Allow down to 60 Hz to catch slightly flat low E
+    if (frequency && frequency > 60 && frequency < 2000) {
       const result = this.frequencyToPitchResult(frequency)
       if (result.confidence >= this.confidenceThreshold) {
         this.callback?.(result)
@@ -57,17 +72,14 @@ export class PitchDetector {
   }
 
   private frequencyToPitchResult(frequency: number): PitchResult {
-    // Convert frequency to MIDI note number
     const midiFloat = 69 + 12 * Math.log2(frequency / 440)
     const midiRounded = Math.round(midiFloat)
     const cents = Math.round((midiFloat - midiRounded) * 100)
 
-    // Estimate confidence from how close to a semitone boundary we are
     const confidence = 1 - Math.abs(cents) / 50
 
     const note = midiToNote(midiRounded)
 
-    // Verify with noteToFrequency for accuracy check
     const expectedFreq = noteToFrequency(note)
     const freqConfidence = expectedFreq
       ? 1 - Math.abs(frequency - expectedFreq) / expectedFreq
