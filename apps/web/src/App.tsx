@@ -1,11 +1,13 @@
 import { Routes, Route } from 'react-router-dom'
 import { useEffect, lazy, Suspense } from 'react'
 import { useUIStore } from '@/stores/uiStore'
+import { useAuthStore } from '@/stores/authStore'
 import AppShell from '@/components/layout/AppShell'
 import LevelUpOverlay from '@/components/Gamification/LevelUpOverlay'
 
 // ── Lazy-loaded pages (code-split per route) ─────────────────────────────────
 const Landing = lazy(() => import('@/pages/Landing'))
+const Auth = lazy(() => import('@/pages/Auth'))
 const Onboarding = lazy(() => import('@/pages/Onboarding'))
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
 const PlayBrowser = lazy(() => import('@/pages/PlayBrowser'))
@@ -34,6 +36,12 @@ function PageLoading() {
 
 export default function App() {
   const { ageMode, highContrast, reducedMotion } = useUIStore()
+  const initAuth = useAuthStore((s) => s.initialize)
+
+  // Initialize Supabase auth session on mount
+  useEffect(() => {
+    initAuth()
+  }, [initAuth])
 
   useEffect(() => {
     document.documentElement.setAttribute('data-age-mode', ageMode)
@@ -48,6 +56,7 @@ export default function App() {
     <Routes>
       {/* Public routes (no shell) */}
       <Route path="/" element={<Landing />} />
+      <Route path="/auth" element={<Auth />} />
       <Route path="/onboarding" element={<Onboarding />} />
 
       {/* App routes (with shell) */}

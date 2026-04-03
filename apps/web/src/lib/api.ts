@@ -1,10 +1,8 @@
+import { supabase } from './supabase'
+
 /**
  * Central API client.
- * All fetch calls go through here so base URL is never hardcoded.
- *
- * VITE_API_URL:
- *   dev  → http://localhost:3001
- *   prod → https://dannygrande.com/music-api  (later: https://api.melodypath.com)
+ * Automatically attaches Supabase JWT for authenticated requests.
  */
 const BASE_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:3001').replace(/\/$/, '')
 
@@ -12,12 +10,26 @@ interface RequestOptions extends Omit<RequestInit, 'body'> {
   body?: unknown
 }
 
+async function getAuthHeader(): Promise<Record<string, string>> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session?.access_token) {
+      return { Authorization: `Bearer ${session.access_token}` }
+    }
+  } catch {
+    // Not authenticated — that's fine
+  }
+  return {}
+}
+
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { body, headers, ...rest } = options
+  const authHeaders = await getAuthHeader()
 
   const response = await fetch(`${BASE_URL}${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      ...authHeaders,
       ...headers,
     },
     body: body !== undefined ? JSON.stringify(body) : undefined,

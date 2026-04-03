@@ -9,12 +9,20 @@ export default function Landing() {
           <span className="text-3xl">🎵</span>
           <span className="text-xl font-bold text-primary-700">MelodyPath</span>
         </div>
-        <Link
-          to="/onboarding"
-          className="px-5 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
-        >
-          Get Started
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/auth"
+            className="px-4 py-2 text-primary-600 font-medium hover:text-primary-700 transition-colors text-sm"
+          >
+            Log In
+          </Link>
+          <Link
+            to="/onboarding"
+            className="px-5 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
+          >
+            Get Started
+          </Link>
+        </div>
       </header>
 
       {/* Hero */}

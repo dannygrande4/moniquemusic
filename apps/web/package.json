@@ -13,6 +13,7 @@
     "@melodypath/audio-engine": "workspace:*",
     "@melodypath/music-theory": "workspace:*",
     "@melodypath/shared-types": "workspace:*",
+    "@supabase/supabase-js": "^2.101.1",
     "@tonejs/midi": "^2.0.28",
     "clsx": "^2.1.1",
     "framer-motion": "^12.7.4",

@@ -1,7 +1,7 @@
-import { Outlet, NavLink } from 'react-router-dom'
-import { useState } from 'react'
+import { Outlet, NavLink, Link } from 'react-router-dom'
 import { useUIStore } from '@/stores/uiStore'
 import { useUserStore } from '@/stores/userStore'
+import { useAuthStore } from '@/stores/authStore'
 
 const NAV_ITEMS = [
   { to: '/dashboard', icon: '🏠', label: 'Dashboard' },
@@ -23,6 +23,7 @@ const ACCESSIBLE_NAV = [
 export default function AppShell() {
   const { ageMode, sidebarOpen, toggleSidebar } = useUIStore()
   const { xp, level, streak_days } = useUserStore()
+  const { user, signOut } = useAuthStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navItems = ageMode === 'accessible' ? ACCESSIBLE_NAV : NAV_ITEMS
@@ -152,6 +153,27 @@ export default function AppShell() {
                 ? `🔥 ${streak_days} days in a row!`
                 : `🔥 ${streak_days} day streak`}
             </div>
+          </div>
+        )}
+
+        {/* Auth status */}
+        {sidebarOpen && (
+          <div className="px-4 py-2 border-t border-surface-200">
+            {user ? (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-surface-500 truncate">{user.email}</span>
+                <button
+                  onClick={signOut}
+                  className="text-xs text-surface-400 hover:text-red-500 ml-2 flex-shrink-0"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link to="/auth" className="text-xs text-primary-600 hover:text-primary-700 font-medium">
+                Sign In / Sign Up
+              </Link>
+            )}
           </div>
         )}
 
