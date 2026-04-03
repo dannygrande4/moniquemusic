@@ -14,10 +14,28 @@ const GUITAR_STRINGS = [
   { string: 1, note: 'E4', freq: 329.63 },
 ]
 
+function getMostCommonNote(results: PitchResult[]): string | null {
+  const counts: Record<string, number> = {}
+  for (const r of results) {
+    counts[r.note] = (counts[r.note] ?? 0) + 1
+  }
+  let best: string | null = null
+  let bestCount = 0
+  for (const [note, count] of Object.entries(counts)) {
+    if (count > bestCount) {
+      best = note
+      bestCount = count
+    }
+  }
+  return best
+}
+
 export default function Tuner() {
   const [listening, setListening] = useState(false)
   const [pitch, setPitch] = useState<PitchResult | null>(null)
   const detectorRef = useRef<PitchDetector | null>(null)
+  const historyRef = useRef<PitchResult[]>([])
+  const lastUpdateRef = useRef(0)
 
   const startListening = useCallback(async () => {
     if (detectorRef.current) {
@@ -26,7 +44,43 @@ export default function Tuner() {
     const detector = new PitchDetector()
     detectorRef.current = detector
     setListening(true)
-    await detector.start((result) => setPitch(result))
+    historyRef.current = []
+
+    await detector.start((result) => {
+      const now = Date.now()
+
+      if (!result) {
+        // Only clear display after 800ms of silence
+        if (now - lastUpdateRef.current > 800) {
+          setPitch(null)
+        }
+        return
+      }
+
+      // Keep a rolling window of recent detections
+      historyRef.current.push(result)
+      if (historyRef.current.length > 8) historyRef.current.shift()
+
+      // Only update display if we have consistent readings
+      const recent = historyRef.current.slice(-5)
+      const mostCommonNote = getMostCommonNote(recent)
+
+      if (mostCommonNote && recent.filter((r) => r.note === mostCommonNote).length >= 3) {
+        // Average the frequency and cents for the dominant note
+        const matching = recent.filter((r) => r.note === mostCommonNote)
+        const avgFreq = matching.reduce((s, r) => s + r.frequency, 0) / matching.length
+        const avgCents = Math.round(matching.reduce((s, r) => s + r.cents, 0) / matching.length)
+        const avgConfidence = matching.reduce((s, r) => s + r.confidence, 0) / matching.length
+
+        setPitch({
+          note: mostCommonNote,
+          frequency: avgFreq,
+          cents: avgCents,
+          confidence: avgConfidence,
+        })
+        lastUpdateRef.current = now
+      }
+    })
   }, [])
 
   const stopListening = useCallback(() => {
