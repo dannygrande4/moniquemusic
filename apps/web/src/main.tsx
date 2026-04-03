@@ -6,7 +6,7 @@ import './index.css'
 
 // VITE_BASE_PATH controls both Vite asset base and React Router basename.
 // Dev: /music  |  Own domain (future): /
-const basePath = import.meta.env.VITE_BASE_PATH ?? '/music'
+const basePath = import.meta.env.VITE_BASE_PATH || '/'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
