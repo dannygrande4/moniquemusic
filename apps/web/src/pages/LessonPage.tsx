@@ -6,6 +6,9 @@ import { useUserStore } from '@/stores/userStore'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import PianoKeyboard from '@/components/Piano/PianoKeyboard'
+import Mascot from '@/components/ui/Mascot'
+import { useUIStore } from '@/stores/uiStore'
+import { kidsify } from '@/lib/kidsMode'
 
 export default function LessonPage() {
   const { lessonId } = useParams<{ lessonId: string }>()
@@ -14,6 +17,8 @@ export default function LessonPage() {
   const markComplete = useLessonStore((s) => s.markComplete)
   const addXP = useUserStore((s) => s.addXP)
   const recordPractice = useUserStore((s) => s.recordPractice)
+  const ageMode = useUIStore((s) => s.ageMode)
+  const isKids = ageMode === 'kids'
   const { ensureAudio } = useAudioInit()
   const engine = useAudioStore((s) => s.engine)
 
@@ -161,13 +166,17 @@ export default function LessonPage() {
         <div className="bg-primary-500 h-1.5 rounded-full transition-all" style={{ width: `${progress}%` }} />
       </div>
 
+      {/* Kids mascot */}
+      <Mascot category="encouragement" size="sm" />
+
       {/* Step content */}
       <div className="bg-white rounded-xl border border-surface-200 p-6 min-h-[300px]">
         {currentStep?.type === 'text' && (
           <div>
             <h2 className="text-lg font-bold text-surface-900 mb-4">{currentStep.title}</h2>
             <div className="prose text-surface-700 leading-relaxed whitespace-pre-line">
-              {currentStep.content.split(/(\*\*[^*]+\*\*)/).map((part, i) => {
+              {(isKids ? kidsify(currentStep.content) : currentStep.content)
+                .split(/(\*\*[^*]+\*\*)/).map((part, i) => {
                 if (part.startsWith('**') && part.endsWith('**')) {
                   return <strong key={i} className="text-surface-900">{part.slice(2, -2)}</strong>
                 }

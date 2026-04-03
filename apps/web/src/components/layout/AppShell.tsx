@@ -65,14 +65,22 @@ export default function AppShell() {
         {/* Stats footer */}
         {sidebarOpen && (
           <div className="px-4 py-3 border-t border-surface-200 space-y-1">
-            <div className="text-xs text-surface-600">Level {level}</div>
+            <div className="text-xs text-surface-600">
+              {ageMode === 'kids'
+                ? `${'⭐'.repeat(Math.min(level, 5))} Level ${level}`
+                : `Level ${level}`}
+            </div>
             <div className="w-full bg-surface-200 rounded-full h-1.5">
               <div
                 className="bg-primary-500 h-1.5 rounded-full transition-all"
                 style={{ width: `${(xp % 100)}%` }}
               />
             </div>
-            <div className="text-xs text-surface-600">🔥 {streak_days} day streak</div>
+            <div className="text-xs text-surface-600">
+              {ageMode === 'kids'
+                ? `🔥 ${streak_days} days in a row!`
+                : `🔥 ${streak_days} day streak`}
+            </div>
           </div>
         )}
 

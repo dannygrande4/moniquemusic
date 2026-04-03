@@ -83,7 +83,9 @@ export default function GuitarFretboard({
 
   const handleClick = useCallback(
     (stringNum: number, fret: number) => {
-      const openNote = tuning[stringNum - 1]
+      // stringNum: 6=low E, 1=high E. tuning[0]=low E, tuning[5]=high E
+      const stringIdx = 6 - stringNum
+      const openNote = tuning[stringIdx]
       const note = noteAtFret(openNote, fret)
       onNotePlay?.(note)
     },
