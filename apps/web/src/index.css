@@ -5,13 +5,12 @@
 /* ── CSS custom properties (design tokens) ───────────────────────────────── */
 
 :root {
-  /* Default: adult mode */
   --base-font-size: 16px;
   --line-height: 1.5;
   --border-radius: 0.5rem;
   --transition-speed: 200ms;
 
-  /* Semantic colors (overridden per age mode) */
+  /* Light theme (default) */
   --color-bg: theme('colors.surface.50');
   --color-surface: #ffffff;
   --color-border: theme('colors.surface.200');
@@ -20,6 +19,61 @@
   --color-primary: theme('colors.primary.500');
   --color-primary-dark: theme('colors.primary.700');
   --color-accent: theme('colors.accent.500');
+}
+
+/* ── Dark mode ───────────────────────────────────────────────────────────── */
+
+.dark {
+  --color-bg: #0a0a0b;
+  --color-surface: #18181b;
+  --color-border: #27272a;
+  --color-text: #fafafa;
+  --color-text-muted: #a1a1aa;
+  --color-primary: #6d8af9;
+  --color-primary-dark: #4f6ef7;
+  --color-accent: #f59e0b;
+}
+
+.dark body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Dark mode surface overrides via Tailwind */
+.dark .bg-white { background-color: #18181b; }
+.dark .bg-surface-50 { background-color: #0a0a0b; }
+.dark .bg-surface-100 { background-color: #18181b; }
+.dark .border-surface-200 { border-color: #27272a; }
+.dark .border-surface-100 { border-color: #1f1f23; }
+.dark .text-surface-900 { color: #fafafa; }
+.dark .text-surface-800 { color: #d4d4d8; }
+.dark .text-surface-700 { color: #a1a1aa; }
+.dark .text-surface-600 { color: #a1a1aa; }
+.dark .text-surface-500 { color: #71717a; }
+.dark .text-surface-400 { color: #52525b; }
+.dark .text-surface-300 { color: #3f3f46; }
+.dark .bg-surface-200 { background-color: #27272a; }
+.dark .hover\:bg-surface-50:hover { background-color: #1f1f23; }
+.dark .hover\:bg-surface-100:hover { background-color: #27272a; }
+
+/* Dark mode for specific components */
+.dark .bg-gradient-to-br { background-image: none; background-color: #0a0a0b; }
+.dark .bg-gradient-to-r { background-image: none; }
+.dark .bg-green-50 { background-color: #052e16; }
+.dark .text-green-800, .dark .text-green-700 { color: #4ade80; }
+.dark .bg-red-50 { background-color: #2a0a0a; }
+.dark .text-red-800, .dark .text-red-700 { color: #f87171; }
+.dark .bg-yellow-100 { background-color: #422006; }
+.dark .text-yellow-700 { color: #fbbf24; }
+.dark .bg-primary-50 { background-color: #1e1b4b; }
+.dark .ring-primary-300 { --tw-ring-color: #4338ca; }
+.dark .border-primary-100 { border-color: #312e81; }
+
+/* Dark inputs */
+.dark input, .dark select {
+  background-color: #27272a;
+  border-color: #3f3f46;
+  color: #fafafa;
 }
 
 /* Kids mode overrides */

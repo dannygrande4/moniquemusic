@@ -4,7 +4,36 @@ import { useUserStore } from '@/stores/userStore'
 import { useUIStore } from '@/stores/uiStore'
 import type { AgeGroup, InstrumentType, SkillLevel, AgeMode } from '@melodypath/shared-types'
 
-type Step = 'age' | 'instrument' | 'skill' | 'done'
+type Step = 'age' | 'instrument' | 'quiz' | 'done'
+
+// Skill assessment questions — each correct answer adds points
+const QUIZ_QUESTIONS = [
+  {
+    question: 'How many notes are in a major scale?',
+    options: ['5', '7', '12', 'I don\'t know'],
+    points: [0, 2, 1, 0], // 7 is correct (2 pts), 12 shows some knowledge (1 pt)
+  },
+  {
+    question: 'What notes make up a C major chord?',
+    options: ['C, D, E', 'C, E, G', 'C, F, G', 'I don\'t know'],
+    points: [0, 2, 1, 0],
+  },
+  {
+    question: 'What does "BPM" stand for?',
+    options: ['Beats Per Measure', 'Beats Per Minute', 'Bass Per Melody', 'I don\'t know'],
+    points: [1, 2, 0, 0],
+  },
+  {
+    question: 'What is a chord inversion?',
+    options: ['Playing a chord backwards', 'Same chord with a different note on the bottom', 'A minor version of a major chord', 'I don\'t know'],
+    points: [0, 2, 0, 0],
+  },
+  {
+    question: 'What is a ii-V-I progression?',
+    options: ['A blues riff', 'A common jazz chord progression', 'A scale pattern', 'I don\'t know'],
+    points: [0, 2, 0, 0],
+  },
+]
 
 export default function Onboarding() {
   const navigate = useNavigate()
@@ -14,6 +43,8 @@ export default function Onboarding() {
   const [step, setStep] = useState<Step>('age')
   const [_age, setAge] = useState<AgeGroup | null>(null)
   const [_instrument, setInstrumentLocal] = useState<InstrumentType | null>(null)
+  const [quizIdx, setQuizIdx] = useState(0)
+  const [quizScore, setQuizScore] = useState(0)
 
   function handleAge(group: AgeGroup) {
     setAge(group)
@@ -26,13 +57,25 @@ export default function Onboarding() {
   function handleInstrument(inst: InstrumentType) {
     setInstrumentLocal(inst)
     setInstrument(inst)
-    setStep('skill')
+    setStep('quiz')
+    setQuizIdx(0)
+    setQuizScore(0)
   }
 
-  function handleSkill(level: SkillLevel) {
-    setSkillLevel(level)
-    setStep('done')
-    setTimeout(() => navigate('/dashboard'), 800)
+  function handleQuizAnswer(points: number) {
+    const newScore = quizScore + points
+    setQuizScore(newScore)
+
+    if (quizIdx + 1 >= QUIZ_QUESTIONS.length) {
+      // Calculate skill level from total score
+      // Max possible: 10 points (5 questions × 2 pts each)
+      const level: SkillLevel = newScore >= 7 ? 'ADVANCED' : newScore >= 3 ? 'INTERMEDIATE' : 'BEGINNER'
+      setSkillLevel(level)
+      setStep('done')
+      setTimeout(() => navigate('/dashboard'), 800)
+    } else {
+      setQuizIdx(quizIdx + 1)
+    }
   }
 
   const btnClass =
@@ -92,35 +135,36 @@ export default function Onboarding() {
           </div>
         )}
 
-        {step === 'skill' && (
-          <div>
-            <h2 className="text-2xl font-bold text-center text-surface-900 mb-2">Where are you on your journey?</h2>
-            <p className="text-surface-500 text-center mb-8">Be honest — there's no wrong answer!</p>
-            <div className="space-y-4">
-              <button className={`${btnClass} w-full flex-row justify-start gap-4 text-left`} onClick={() => handleSkill('BEGINNER')}>
-                <span className="text-3xl">🌱</span>
-                <div>
-                  <div className="font-bold">Beginner</div>
-                  <div className="text-sm text-surface-500">Just starting out, or haven't played in years</div>
-                </div>
-              </button>
-              <button className={`${btnClass} w-full flex-row justify-start gap-4 text-left`} onClick={() => handleSkill('INTERMEDIATE')}>
-                <span className="text-3xl">🌿</span>
-                <div>
-                  <div className="font-bold">Intermediate</div>
-                  <div className="text-sm text-surface-500">I know some chords and can play basic songs</div>
-                </div>
-              </button>
-              <button className={`${btnClass} w-full flex-row justify-start gap-4 text-left`} onClick={() => handleSkill('ADVANCED')}>
-                <span className="text-3xl">🌳</span>
-                <div>
-                  <div className="font-bold">Advanced</div>
-                  <div className="text-sm text-surface-500">Comfortable with scales, modes, and complex music</div>
-                </div>
-              </button>
+        {step === 'quiz' && (() => {
+          const q = QUIZ_QUESTIONS[quizIdx]
+          return (
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-surface-900">Quick Assessment</h2>
+                <span className="text-sm text-surface-400">{quizIdx + 1}/{QUIZ_QUESTIONS.length}</span>
+              </div>
+              {/* Progress bar */}
+              <div className="w-full bg-surface-100 rounded-full h-1.5 mb-6">
+                <div className="bg-primary-500 h-1.5 rounded-full transition-all" style={{ width: `${(quizIdx / QUIZ_QUESTIONS.length) * 100}%` }} />
+              </div>
+              <p className="text-lg font-medium text-surface-900 mb-6">{q.question}</p>
+              <div className="space-y-3">
+                {q.options.map((opt, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleQuizAnswer(q.points[i])}
+                    className={`${btnClass} w-full text-left`}
+                  >
+                    <span className="font-medium">{opt}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-surface-400 text-center mt-6">
+                No wrong answers — this just helps us personalize your experience
+              </p>
             </div>
-          </div>
-        )}
+          )
+        })()}
 
         {step === 'done' && (
           <div className="text-center">

@@ -34,14 +34,34 @@ const CHORD_CHALLENGES: Challenge[] = [
   { type: 'chord', prompt: 'Play a D major chord', targetNotes: ['D', 'F#', 'A'], chordName: 'D', hint: 'Root, 3rd, 5th: D F# A' },
   { type: 'chord', prompt: 'Play an E minor chord', targetNotes: ['E', 'G', 'B'], chordName: 'Em', hint: 'Root, b3rd, 5th: E G B' },
   { type: 'chord', prompt: 'Play an A minor chord', targetNotes: ['A', 'C', 'E'], chordName: 'Am', hint: 'Root, b3rd, 5th: A C E' },
+  { type: 'chord', prompt: 'Play an F major chord', targetNotes: ['F', 'A', 'C'], chordName: 'F', hint: 'Root, 3rd, 5th: F A C' },
+  { type: 'chord', prompt: 'Play a D minor chord', targetNotes: ['D', 'F', 'A'], chordName: 'Dm', hint: 'Root, b3rd, 5th: D F A' },
 ]
 
-type Difficulty = 'notes' | 'sequences' | 'chords' | 'mixed'
+const INTERVAL_CHALLENGES: Challenge[] = [
+  { type: 'sequence', prompt: 'Play a major 3rd from C (C → E)', targetNotes: ['C', 'E'], hint: '4 half steps up' },
+  { type: 'sequence', prompt: 'Play a perfect 5th from A (A → E)', targetNotes: ['A', 'E'], hint: '7 half steps up' },
+  { type: 'sequence', prompt: 'Play a perfect 4th from G (G → C)', targetNotes: ['G', 'C'], hint: '5 half steps up' },
+  { type: 'sequence', prompt: 'Play a minor 3rd from E (E → G)', targetNotes: ['E', 'G'], hint: '3 half steps up' },
+  { type: 'sequence', prompt: 'Play an octave from A (low A → high A)', targetNotes: ['A', 'A'], hint: 'Same note, higher up' },
+  { type: 'sequence', prompt: 'Play a major 2nd from D (D → E)', targetNotes: ['D', 'E'], hint: '2 half steps (whole step)' },
+]
+
+const PROGRESSION_CHALLENGES: Challenge[] = [
+  { type: 'sequence', prompt: 'Play I-IV-V in C (C → F → G)', targetNotes: ['C', 'F', 'G'], hint: 'The most common progression' },
+  { type: 'sequence', prompt: 'Play I-V-vi-IV in G (G → D → E → C)', targetNotes: ['G', 'D', 'E', 'C'], hint: 'The pop progression' },
+  { type: 'sequence', prompt: 'Play i-iv-v in A minor (A → D → E)', targetNotes: ['A', 'D', 'E'], hint: 'Minor version of I-IV-V' },
+  { type: 'sequence', prompt: 'Play the 12-bar blues root notes in A (A → D → A → E → D → A)', targetNotes: ['A', 'D', 'A', 'E', 'D', 'A'], hint: 'Just the root note of each chord change' },
+]
+
+type Difficulty = 'notes' | 'sequences' | 'chords' | 'intervals' | 'progressions' | 'mixed'
 
 const DIFFICULTY_INFO: Record<Difficulty, { label: string; desc: string; icon: string }> = {
   notes: { label: 'Single Notes', desc: 'Play one note at a time', icon: '🎵' },
   sequences: { label: 'Note Sequences', desc: 'Play notes in order', icon: '🎶' },
+  intervals: { label: 'Intervals', desc: 'Play two notes apart', icon: '📏' },
   chords: { label: 'Chords', desc: 'Play full chords', icon: '🎸' },
+  progressions: { label: 'Progressions', desc: 'Play chord root sequences', icon: '🔄' },
   mixed: { label: 'Mixed', desc: 'All challenge types', icon: '🔥' },
 }
 
@@ -74,7 +94,9 @@ export default function Challenges() {
     if (difficulty === 'notes') pool = NOTE_CHALLENGES
     else if (difficulty === 'sequences') pool = SEQUENCE_CHALLENGES
     else if (difficulty === 'chords') pool = CHORD_CHALLENGES
-    else pool = [...NOTE_CHALLENGES, ...SEQUENCE_CHALLENGES, ...CHORD_CHALLENGES]
+    else if (difficulty === 'intervals') pool = INTERVAL_CHALLENGES
+    else if (difficulty === 'progressions') pool = PROGRESSION_CHALLENGES
+    else pool = [...NOTE_CHALLENGES, ...SEQUENCE_CHALLENGES, ...CHORD_CHALLENGES, ...INTERVAL_CHALLENGES, ...PROGRESSION_CHALLENGES]
     return shuffleArray(pool).slice(0, ROUNDS)
   }, [difficulty])
 

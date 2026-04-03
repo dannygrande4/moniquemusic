@@ -37,7 +37,7 @@ function PageLoading() {
 }
 
 export default function App() {
-  const { ageMode, highContrast, reducedMotion } = useUIStore()
+  const { ageMode, theme, highContrast, reducedMotion } = useUIStore()
   const initAuth = useAuthStore((s) => s.initialize)
 
   // One-time: clear old anonymous progress on first load after this update
@@ -59,11 +59,22 @@ export default function App() {
   // Sync stores with authenticated user (reset on logout, load on login)
   useAuthSync()
 
+  // Apply theme
   useEffect(() => {
+    const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.classList.toggle('dark', isDark)
     document.documentElement.setAttribute('data-age-mode', ageMode)
     document.documentElement.setAttribute('data-high-contrast', String(highContrast))
     document.documentElement.setAttribute('data-reduced-motion', String(reducedMotion))
-  }, [ageMode, highContrast, reducedMotion])
+
+    // Listen for system theme changes
+    if (theme === 'system') {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)')
+      const handler = (e: MediaQueryListEvent) => document.documentElement.classList.toggle('dark', e.matches)
+      mq.addEventListener('change', handler)
+      return () => mq.removeEventListener('change', handler)
+    }
+  }, [ageMode, theme, highContrast, reducedMotion])
 
   return (
     <>

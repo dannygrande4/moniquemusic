@@ -24,7 +24,7 @@ const MODE_OPTIONS: { value: AgeMode; label: string; desc: string }[] = [
 
 export default function Settings() {
   const { age_group, instrument, skill_level, setAgeGroup, setInstrument, setSkillLevel } = useUserStore()
-  const { ageMode, highContrast, reducedMotion, setAgeMode, setHighContrast, setReducedMotion } = useUIStore()
+  const { ageMode, theme, highContrast, reducedMotion, setAgeMode, setTheme, setHighContrast, setReducedMotion } = useUIStore()
   const { volume, setVolume, midiInputs, activeMidiInput, connectMIDI, selectMidiInput, initialized } = useAudioStore()
 
   return (
@@ -107,6 +107,30 @@ export default function Settings() {
       {/* ─── Display ─────────────────────────────────────────────────── */}
       <section className="bg-white rounded-xl border border-surface-200 p-6 space-y-5">
         <h2 className="font-bold text-surface-900">Display</h2>
+
+        {/* Theme */}
+        <div>
+          <label className="text-sm font-medium text-surface-700 mb-2 block">Theme</label>
+          <div className="flex gap-2">
+            {([
+              { value: 'light' as const, label: 'Light', icon: '☀️' },
+              { value: 'dark' as const, label: 'Dark', icon: '🌙' },
+              { value: 'system' as const, label: 'System', icon: '💻' },
+            ]).map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setTheme(opt.value)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
+                  theme === opt.value
+                    ? 'border-primary-400 bg-primary-50 text-primary-700'
+                    : 'border-surface-200 hover:bg-surface-50 text-surface-600'
+                }`}
+              >
+                {opt.icon} {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {/* UI Mode */}
         <div>
