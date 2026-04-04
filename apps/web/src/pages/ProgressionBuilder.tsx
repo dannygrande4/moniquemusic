@@ -4,7 +4,8 @@ import { useAudioStore } from '@/stores/audioStore'
 import { getChordNotes, getProgressionChords } from '@melodypath/music-theory'
 import InfoTooltip from '@/components/ui/InfoTooltip'
 
-const KEYS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+const MAJOR_KEYS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+const MINOR_KEYS = ['Am', 'A#m', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m']
 
 const NUMERALS_MAJOR = [
   { numeral: 'I', label: 'I', quality: 'Major' },
@@ -16,14 +17,30 @@ const NUMERALS_MAJOR = [
   { numeral: 'vii°', label: 'vii°', quality: 'Dim' },
 ]
 
-const PRESETS = [
+const NUMERALS_MINOR = [
+  { numeral: 'i', label: 'i', quality: 'Minor' },
+  { numeral: 'ii°', label: 'ii°', quality: 'Dim' },
+  { numeral: 'III', label: 'III', quality: 'Major' },
+  { numeral: 'iv', label: 'iv', quality: 'Minor' },
+  { numeral: 'v', label: 'v', quality: 'Minor' },
+  { numeral: 'VI', label: 'VI', quality: 'Major' },
+  { numeral: 'VII', label: 'VII', quality: 'Major' },
+]
+
+const PRESETS_MAJOR = [
   { name: 'I-IV-V-I (Classic)', numerals: ['I', 'IV', 'V', 'I'] },
   { name: 'I-V-vi-IV (Pop)', numerals: ['I', 'V', 'vi', 'IV'] },
   { name: 'I-vi-IV-V (50s)', numerals: ['I', 'vi', 'IV', 'V'] },
   { name: 'ii-V-I (Jazz)', numerals: ['ii', 'V', 'I'] },
-  { name: 'I-IV-vi-V', numerals: ['I', 'IV', 'vi', 'V'] },
   { name: 'vi-IV-I-V', numerals: ['vi', 'IV', 'I', 'V'] },
   { name: '12-Bar Blues', numerals: ['I', 'I', 'I', 'I', 'IV', 'IV', 'I', 'I', 'V', 'IV', 'I', 'V'] },
+]
+
+const PRESETS_MINOR = [
+  { name: 'i-iv-v (Natural)', numerals: ['i', 'iv', 'v', 'i'] },
+  { name: 'i-VI-III-VII (Andalusian)', numerals: ['i', 'VII', 'VI', 'v'] },
+  { name: 'i-iv-V (Harmonic)', numerals: ['i', 'iv', 'V', 'i'] },
+  { name: 'i-III-VII-VI', numerals: ['i', 'III', 'VII', 'VI'] },
 ]
 
 const BPM_OPTIONS = [60, 80, 100, 120, 140, 160]
@@ -32,6 +49,7 @@ export default function ProgressionBuilder() {
   const { ensureAudio } = useAudioInit()
   const engine = useAudioStore((s) => s.engine)
 
+  const [keyMode, setKeyMode] = useState<'major' | 'minor'>('major')
   const [key, setKey] = useState('C')
   const [numerals, setNumerals] = useState<string[]>(['I', 'IV', 'V', 'I'])
   const [bpm, setBpm] = useState(100)
@@ -41,8 +59,14 @@ export default function ProgressionBuilder() {
 
   const intervalRef = useState<ReturnType<typeof setInterval> | null>(null)
 
+  const isMinor = keyMode === 'minor'
+  const keyName = isMinor ? `${key}m` : key
+  const availableNumerals = isMinor ? NUMERALS_MINOR : NUMERALS_MAJOR
+  const availablePresets = isMinor ? PRESETS_MINOR : PRESETS_MAJOR
+  const availableKeys = isMinor ? MINOR_KEYS : MAJOR_KEYS
+
   // Resolve numerals to actual chord names
-  const chordNames = getProgressionChords(key, numerals)
+  const chordNames = getProgressionChords(keyName, numerals)
 
   // ─── Add/remove chords ──────────────────────────────────────────────
 
@@ -106,7 +130,7 @@ export default function ProgressionBuilder() {
       const chordRoot = chordNames[idx]
       if (chordRoot) {
         const root = chordRoot.replace(/[^A-G#b]/g, '')
-        const isMinor = chordRoot.includes('m') && !chordRoot.includes('maj')
+        const isMinor = /m(?!aj)/.test(chordRoot.replace(/^[A-G][#b]?/, '')) || chordRoot.endsWith('m')
         const chordType = isMinor ? 'minor' : 'major'
         const notes = getChordNotes(root, chordType, 3)
         if (notes.length > 0) {
@@ -152,11 +176,33 @@ export default function ProgressionBuilder() {
         </p>
       </div>
 
+      {/* Major / Minor toggle */}
+      <div className="flex gap-2">
+        <div className="flex bg-surface-100 rounded-lg p-1">
+          <button
+            onClick={() => { setKeyMode('major'); setNumerals(['I', 'IV', 'V', 'I']) }}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+              keyMode === 'major' ? 'bg-white text-surface-900 shadow-sm' : 'text-surface-500'
+            }`}
+          >
+            Major
+          </button>
+          <button
+            onClick={() => { setKeyMode('minor'); setNumerals(['i', 'iv', 'v', 'i']) }}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+              keyMode === 'minor' ? 'bg-white text-surface-900 shadow-sm' : 'text-surface-500'
+            }`}
+          >
+            Minor
+          </button>
+        </div>
+      </div>
+
       {/* Key selector */}
       <div>
         <label className="block text-xs font-medium text-surface-500 mb-1.5">Key</label>
         <div className="flex flex-wrap gap-1">
-          {KEYS.map((k) => (
+          {MAJOR_KEYS.map((k) => (
             <button
               key={k}
               onClick={() => setKey(k)}
@@ -176,7 +222,7 @@ export default function ProgressionBuilder() {
       <div>
         <label className="block text-xs font-medium text-surface-500 mb-1.5">Presets</label>
         <div className="flex flex-wrap gap-1.5">
-          {PRESETS.map((preset) => (
+          {availablePresets.map((preset) => (
             <button
               key={preset.name}
               onClick={() => loadPreset(preset)}
@@ -192,7 +238,7 @@ export default function ProgressionBuilder() {
       <div className="bg-white rounded-xl border border-surface-200 p-5 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-surface-900">
-            Your Progression in {key}
+            Your Progression in {key} {isMinor ? 'minor' : 'major'}
           </h2>
           <span className="text-xs text-surface-400">{numerals.length} chords</span>
         </div>
@@ -245,7 +291,7 @@ export default function ProgressionBuilder() {
         <div>
           <label className="block text-xs font-medium text-surface-500 mb-1.5">Add Chord</label>
           <div className="flex flex-wrap gap-1.5">
-            {NUMERALS_MAJOR.map((n) => (
+            {availableNumerals.map((n) => (
               <button
                 key={n.numeral}
                 onClick={() => addChord(n.numeral)}

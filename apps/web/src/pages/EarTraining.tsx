@@ -32,6 +32,10 @@ const CHORD_TYPES = [
   { name: 'Diminished', type: 'dim' },
   { name: 'Augmented', type: 'aug' },
   { name: 'Dominant 7th', type: '7' },
+  { name: 'Major 7th', type: 'maj7' },
+  { name: 'Minor 7th', type: 'm7' },
+  { name: 'Sus2', type: 'sus2' },
+  { name: 'Sus4', type: 'sus4' },
 ]
 
 const ROOT_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B']

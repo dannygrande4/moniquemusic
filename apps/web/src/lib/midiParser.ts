@@ -170,7 +170,7 @@ export function generateOdeToJoy(bpm = 100, numLanes = 4): { notes: NoteEvent[];
  */
 export function generateSmokeOnTheWater(bpm = 112, numLanes = 4): { notes: NoteEvent[]; duration: number } {
   const beat = 60 / bpm
-  // G Bb C | G Bb Db C | G Bb C | Bb G (simplified to lanes)
+  // Riff: G5-Bb5-C5 | G5-Bb5-Db5-C5 | G5-Bb5-C5 | Bb5-G5 (power chord roots)
   const riff = [
     { note: 'G3', lane: 0, time: 0 },
     { note: 'Bb3', lane: 1, time: 1.5 },

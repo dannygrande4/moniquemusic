@@ -135,15 +135,26 @@ const NUMERAL_TO_DEGREE: Record<string, number> = {
 }
 
 /**
- * Get chord names for a progression in a given key
- * e.g. getProgressionChords("C", ["I", "IV", "V", "I"]) → ["C", "F", "G", "C"]
+ * Get chord names for a progression in a given key.
+ * Supports both major and minor keys.
+ * @param keyRoot e.g. "C" for C major, "Am" for A minor
+ * @param numerals e.g. ["I", "IV", "V"] or ["i", "iv", "V"]
  */
 export function getProgressionChords(keyRoot: string, numerals: string[]): string[] {
-  const majorKey = Key.majorKey(keyRoot)
-  const chords = majorKey.chords
+  const isMinorKey = keyRoot.endsWith('m') && !keyRoot.endsWith('maj')
+  const root = isMinorKey ? keyRoot.slice(0, -1) : keyRoot
+
+  let chords: string[]
+  if (isMinorKey) {
+    const minorKey = Key.minorKey(root)
+    // Natural minor chords: i, ii°, III, iv, v, VI, VII
+    chords = minorKey.natural.chords
+  } else {
+    const majorKey = Key.majorKey(root)
+    chords = majorKey.chords
+  }
 
   return numerals.map((numeral) => {
-    const isMinor = numeral === numeral.toLowerCase()
     const upperNumeral = numeral.toUpperCase().replace('°', '').replace('+', '')
     const degree = NUMERAL_TO_DEGREE[upperNumeral]
     if (degree === undefined) return numeral
