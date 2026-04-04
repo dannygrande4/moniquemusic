@@ -2,6 +2,45 @@ import { Midi } from '@tonejs/midi'
 import type { NoteEvent } from '@melodypath/shared-types'
 
 /**
+ * Create difficulty variants from a set of notes.
+ * Easy: every other note (half density)
+ * Hard: add passing tones between notes (1.5x density)
+ */
+export function applyDifficultyFilter(
+  notes: NoteEvent[],
+  tier: 'easy' | 'medium' | 'hard',
+): NoteEvent[] {
+  if (tier === 'medium') return notes
+
+  if (tier === 'easy') {
+    // Keep every other note
+    return notes.filter((_, i) => i % 2 === 0)
+  }
+
+  // Hard: add extra notes between existing ones
+  const result: NoteEvent[] = []
+  for (let i = 0; i < notes.length; i++) {
+    result.push(notes[i])
+    if (i < notes.length - 1) {
+      const curr = notes[i]
+      const next = notes[i + 1]
+      const gap = next.time - (curr.time + curr.duration)
+      if (gap > 0.2) {
+        // Add a passing note halfway
+        result.push({
+          note: curr.note,
+          time: curr.time + (next.time - curr.time) * 0.5,
+          duration: curr.duration * 0.5,
+          lane: (curr.lane + next.lane) % 4,
+          velocity: Math.round(curr.velocity * 0.7),
+        })
+      }
+    }
+  }
+  return result
+}
+
+/**
  * Parse a MIDI file (ArrayBuffer) into NoteEvent[] for the note highway.
  * Assigns lanes based on pitch ranges.
  */

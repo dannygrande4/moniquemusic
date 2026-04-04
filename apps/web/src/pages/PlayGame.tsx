@@ -98,13 +98,16 @@ export default function PlayGame() {
     }
   }, [engine, engine.initialized])
 
+  // Difficulty tier
+  const [tier, setTier] = useState<'easy' | 'medium' | 'hard'>('medium')
+
   // ─── Start game ─────────────────────────────────────────────────────
 
   const startGame = useCallback(async () => {
     if (!song) return
     await ensureAudio()
 
-    const { notes: songNotes, duration } = song.getNotes()
+    const { notes: songNotes, duration } = song.getNotes(song.hasTiers ? tier : undefined)
     setNotes(songNotes)
     setSongDuration(duration)
     setScore(0)
@@ -282,6 +285,26 @@ export default function PlayGame() {
             {!midiConnected && (
               <div className="mt-2 text-xs text-surface-600">
                 Connect a MIDI keyboard or guitar interface to play with your instrument
+              </div>
+            )}
+            {/* Difficulty tier selector */}
+            {song.hasTiers && (
+              <div className="flex gap-2 justify-center mt-4">
+                {(['easy', 'medium', 'hard'] as const).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTier(t)}
+                    className={`px-4 py-2 rounded-lg text-sm font-bold capitalize transition-colors ${
+                      tier === t
+                        ? t === 'easy' ? 'bg-timing-perfect text-white'
+                          : t === 'hard' ? 'bg-timing-miss text-white'
+                          : 'bg-primary-600 text-white'
+                        : 'bg-surface-700 text-surface-300 hover:bg-surface-600'
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
               </div>
             )}
             <button

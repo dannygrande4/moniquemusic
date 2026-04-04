@@ -10,7 +10,20 @@ import {
   generateMaryLamb,
   generateWhenTheSaints,
   generateFurElise,
+  applyDifficultyFilter,
 } from './midiParser'
+
+/** Wrap a song generator with difficulty tier support */
+function withTiers(
+  gen: () => { notes: NoteEvent[]; duration: number },
+): (tier?: DifficultyTier) => { notes: NoteEvent[]; duration: number } {
+  return (tier = 'medium') => {
+    const result = gen()
+    return { notes: applyDifficultyFilter(result.notes, tier), duration: result.duration }
+  }
+}
+
+export type DifficultyTier = 'easy' | 'medium' | 'hard'
 
 export interface SongData {
   id: string
@@ -21,7 +34,8 @@ export interface SongData {
   difficulty: 1 | 2 | 3 | 4 | 5
   genre: string
   concepts: string[]
-  getNotes: () => { notes: NoteEvent[]; duration: number }
+  hasTiers?: boolean
+  getNotes: (tier?: DifficultyTier) => { notes: NoteEvent[]; duration: number }
 }
 
 export const SONG_LIBRARY: SongData[] = [
@@ -34,7 +48,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 1,
     genre: 'Children',
     concepts: ['melody', 'simple rhythm', 'repetition'],
-    getNotes: () => generateTwinkle(90),
+        hasTiers: true,
+    getNotes: withTiers(() => generateTwinkle(90)),
   },
   {
     id: 'ode-to-joy',
@@ -45,7 +60,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 1,
     genre: 'Classical',
     concepts: ['melody', 'stepwise motion', 'quarter notes'],
-    getNotes: () => generateOdeToJoy(100),
+        hasTiers: true,
+    getNotes: withTiers(() => generateOdeToJoy(100)),
   },
   {
     id: 'happy-birthday',
@@ -56,7 +72,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 1,
     genre: 'Traditional',
     concepts: ['melody', '3/4 feel', 'pickup notes'],
-    getNotes: () => generateHappyBirthday(100),
+        hasTiers: true,
+    getNotes: withTiers(() => generateHappyBirthday(100)),
   },
   {
     id: 'demo-pattern',
@@ -67,7 +84,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 1,
     genre: 'Practice',
     concepts: ['rhythm', 'coordination', 'timing'],
-    getNotes: () => generateDemoSong(120),
+        hasTiers: true,
+    getNotes: withTiers(() => generateDemoSong(120)),
   },
   {
     id: 'seven-nation-army',
@@ -78,7 +96,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 2,
     genre: 'Rock',
     concepts: ['riff', 'bass line', 'syncopation'],
-    getNotes: () => generateSevenNationArmy(120),
+        hasTiers: true,
+    getNotes: withTiers(() => generateSevenNationArmy(120)),
   },
   {
     id: 'smoke-on-the-water',
@@ -89,7 +108,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 2,
     genre: 'Rock',
     concepts: ['riff', 'power chords', 'syncopation'],
-    getNotes: () => generateSmokeOnTheWater(112),
+        hasTiers: true,
+    getNotes: withTiers(() => generateSmokeOnTheWater(112)),
   },
   {
     id: 'la-bamba',
@@ -100,7 +120,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 3,
     genre: 'Latin Rock',
     concepts: ['I-IV-V', 'fast strumming', 'chord changes'],
-    getNotes: () => generateLaBamba(130),
+        hasTiers: true,
+    getNotes: withTiers(() => generateLaBamba(130)),
   },
   {
     id: 'mary-lamb',
@@ -111,7 +132,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 1,
     genre: 'Children',
     concepts: ['melody', 'repetition', 'simple rhythm'],
-    getNotes: () => generateMaryLamb(100),
+        hasTiers: true,
+    getNotes: withTiers(() => generateMaryLamb(100)),
   },
   {
     id: 'when-the-saints',
@@ -122,7 +144,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 2,
     genre: 'Jazz/Spiritual',
     concepts: ['melody', 'major key', 'syncopation'],
-    getNotes: () => generateWhenTheSaints(110),
+        hasTiers: true,
+    getNotes: withTiers(() => generateWhenTheSaints(110)),
   },
   {
     id: 'fur-elise',
@@ -133,7 +156,8 @@ export const SONG_LIBRARY: SongData[] = [
     difficulty: 3,
     genre: 'Classical',
     concepts: ['classical', 'chromatic', 'eighth notes'],
-    getNotes: () => generateFurElise(85),
+        hasTiers: true,
+    getNotes: withTiers(() => generateFurElise(85)),
   },
 ]
 

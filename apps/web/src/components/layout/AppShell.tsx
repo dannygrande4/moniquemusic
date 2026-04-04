@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { to: '/practice', icon: '🎵', label: 'Practice' },
   { to: '/explore/chords', icon: '🎼', label: 'Chords' },
   { to: '/explore/scales', icon: '🎹', label: 'Scales' },
+  { to: '/progressions', icon: '🔄', label: 'Progressions' },
   { to: '/challenges', icon: '🎯', label: 'Challenges' },
   { to: '/ear-training', icon: '👂', label: 'Ear Training' },
   { to: '/resources', icon: '📋', label: 'Resources' },

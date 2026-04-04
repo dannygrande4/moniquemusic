@@ -22,6 +22,7 @@ const PracticeSandbox = lazy(() => import('@/pages/PracticeSandbox'))
 const Resources = lazy(() => import('@/pages/Resources'))
 const SongImport = lazy(() => import('@/pages/SongImport'))
 const Challenges = lazy(() => import('@/pages/Challenges'))
+const ProgressionBuilder = lazy(() => import('@/pages/ProgressionBuilder'))
 const Profile = lazy(() => import('@/pages/Profile'))
 const Settings = lazy(() => import('@/pages/Settings'))
 
@@ -98,6 +99,7 @@ export default function App() {
         <Route path="/explore/scales" element={<ScaleExplorer />} />
         <Route path="/ear-training" element={<EarTraining />} />
         <Route path="/challenges" element={<Challenges />} />
+        <Route path="/progressions" element={<ProgressionBuilder />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/practice" element={<PracticeSandbox />} />
         <Route path="/profile" element={<Profile />} />
