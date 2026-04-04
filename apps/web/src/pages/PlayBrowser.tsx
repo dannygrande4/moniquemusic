@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SONG_LIBRARY } from '@/lib/songLibrary'
 import { useLeaderboardStore } from '@/stores/leaderboardStore'
+import { useUserStore } from '@/stores/userStore'
 
 const DIFFICULTY_LABELS = ['', 'Easy', 'Medium', 'Hard', 'Expert', 'Master']
 const DIFFICULTY_COLORS = ['', 'text-timing-perfect', 'text-timing-good', 'text-timing-ok', 'text-timing-miss', 'text-accent-500']
@@ -9,6 +10,11 @@ const DIFFICULTY_COLORS = ['', 'text-timing-perfect', 'text-timing-good', 'text-
 export default function PlayBrowser() {
   const [filter, setFilter] = useState<number | null>(null)
   const getBestScore = useLeaderboardStore((s) => s.getBestScore)
+  const skillLevel = useUserStore((s) => s.skill_level)
+
+  // Recommend songs based on skill
+  const maxDiff = skillLevel === 'ADVANCED' ? 5 : skillLevel === 'INTERMEDIATE' ? 3 : 2
+  const recommended = SONG_LIBRARY.filter((s) => s.difficulty <= maxDiff && !getBestScore(s.id)).slice(0, 3)
 
   const songs = filter
     ? SONG_LIBRARY.filter((s) => s.difficulty === filter)
@@ -23,14 +29,36 @@ export default function PlayBrowser() {
         </p>
       </div>
 
+      {/* Recommended for you */}
+      {recommended.length > 0 && (
+        <div>
+          <h2 className="text-sm font-bold text-surface-400 uppercase tracking-wider mb-2">Recommended for you</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {recommended.map((song) => (
+              <Link
+                key={song.id}
+                to={`/play/${song.id}`}
+                className="bg-primary-50 border border-primary-200 rounded-xl p-3 hover:bg-primary-100 transition-colors"
+              >
+                <div className="font-bold text-sm text-surface-900">{song.title}</div>
+                <div className="text-xs text-surface-500">{song.artist} · {DIFFICULTY_LABELS[song.difficulty]}</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Actions */}
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-center">
         <Link
           to="/play/import"
-          className="px-4 py-2 bg-primary-600 text-white text-sm font-bold rounded-lg hover:bg-primary-700 transition-colors"
+          className="px-4 py-2 bg-white border border-surface-200 text-surface-700 text-sm font-medium rounded-lg hover:bg-surface-50 transition-colors"
         >
           Import MIDI File
         </Link>
+        <span className="text-xs text-surface-400">
+          Difficulty: 1 = easy melodies · 3 = moderate · 5 = complex
+        </span>
       </div>
 
       {/* Difficulty filter */}

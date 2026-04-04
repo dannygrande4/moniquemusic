@@ -5,6 +5,7 @@ import { getChordVoicings, voicingToFretNotes } from '@/lib/chordShapes'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import InfoTooltip from '@/components/ui/InfoTooltip'
+import WhatIsThis from '@/components/ui/WhatIsThis'
 import {
   getChord,
   getChordNotes,
@@ -143,6 +144,12 @@ export default function ChordExplorer() {
 
   return (
     <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6 sm:space-y-8">
+      <WhatIsThis
+        explanation="A chord is 3 or more notes played at the same time. Major chords sound happy and bright. Minor chords sound sad and dark. Pick a root note and type below to see and hear any chord on piano and guitar."
+        lessonId="first-chord"
+        lessonTitle="Your First Chord"
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>

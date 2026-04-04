@@ -270,12 +270,26 @@ export default function PlayGame() {
                 <span key={c} className="px-2 py-1 bg-surface-800 rounded-md text-surface-300">{c}</span>
               ))}
             </div>
-            <div className="text-sm text-surface-500 mt-4">
-              Use keys <kbd className="px-1.5 py-0.5 bg-surface-700 rounded text-white font-mono">D</kbd>{' '}
-              <kbd className="px-1.5 py-0.5 bg-surface-700 rounded text-white font-mono">F</kbd>{' '}
-              <kbd className="px-1.5 py-0.5 bg-surface-700 rounded text-white font-mono">J</kbd>{' '}
-              <kbd className="px-1.5 py-0.5 bg-surface-700 rounded text-white font-mono">K</kbd>{' '}
-              to hit the notes, or tap the lanes
+            {/* How to play */}
+            <div className="bg-surface-800 rounded-xl p-4 text-left space-y-2 text-sm">
+              <div className="text-surface-300 font-bold mb-1">How to play:</div>
+              <div className="text-surface-400">
+                🎵 Colored notes fall from the top. When they hit the white line, press the matching key:
+              </div>
+              <div className="flex gap-3 justify-center py-2">
+                {[
+                  { key: 'D', color: 'bg-[#4f6ef7]' },
+                  { key: 'F', color: 'bg-[#22c55e]' },
+                  { key: 'J', color: 'bg-[#f59e0b]' },
+                  { key: 'K', color: 'bg-[#a855f7]' },
+                ].map((l) => (
+                  <div key={l.key} className="flex flex-col items-center gap-1">
+                    <div className={`w-6 h-3 rounded ${l.color}`} />
+                    <kbd className="px-2 py-1 bg-surface-700 rounded text-white font-mono text-xs">{l.key}</kbd>
+                  </div>
+                ))}
+              </div>
+              <div className="text-surface-500 text-xs">On mobile: tap the lane at the bottom. Hit notes in time to build combos and score points!</div>
             </div>
             {midiConnected && (
               <div className="mt-2 px-3 py-1.5 bg-green-900/50 border border-green-700 rounded-lg text-green-400 text-sm font-medium inline-block">
