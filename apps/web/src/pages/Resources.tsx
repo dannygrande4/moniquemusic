@@ -242,7 +242,19 @@ export default function Resources() {
         </p>
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-surface-400 bg-surface-50 rounded-lg p-3">
+      <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800 rounded-xl p-4 flex items-start gap-3">
+        <span className="text-xl flex-shrink-0">💡</span>
+        <div className="text-sm text-surface-700 dark:text-surface-300 space-y-1">
+          <p><strong>Staff notation</strong> is how sheet music works — dots on 5 lines show you which notes to play and how long to hold them.</p>
+          <p><strong>Guitar tab</strong> uses numbers to tell you which fret to press on each string — no music reading needed!</p>
+          <p>Click any scale below to see both.</p>
+          <a href="/explore/scales" className="inline-block mt-1 text-primary-600 dark:text-primary-400 font-medium hover:underline text-xs">
+            Want to hear these scales? Try the Scale Explorer →
+          </a>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 text-xs text-surface-400 bg-surface-50 rounded-lg p-3 hidden">
         <InfoTooltip
           size="md"
           text="Click any scale to expand it and see the staff notation (for reading sheet music) and guitar tab (numbers showing which fret to play on each string). The root note is highlighted in blue."

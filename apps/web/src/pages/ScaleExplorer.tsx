@@ -5,6 +5,7 @@ import { scaleToFretNotes } from '@/lib/scalePositions'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import InfoTooltip from '@/components/ui/InfoTooltip'
+import WhatIsThis from '@/components/ui/WhatIsThis'
 import { getScale, getScaleNotes } from '@melodypath/music-theory'
 
 const SPEED_PRESETS = [
@@ -126,6 +127,12 @@ export default function ScaleExplorer() {
           Select a root note and scale type to visualize it on piano and guitar
         </p>
       </div>
+
+      <WhatIsThis
+        explanation="A scale is a group of notes that sound good together — like a musical ladder. The Major scale sounds happy, the Minor scale sounds sad. Pick a root note (the starting note) and a scale type to see all the notes on piano and guitar. Hit 'Play' to hear it!"
+        lessonId="major-scale"
+        lessonTitle="The Major Scale"
+      />
 
       {/* Controls */}
       <div className="flex flex-wrap items-end gap-4">

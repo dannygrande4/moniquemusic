@@ -454,6 +454,22 @@ export default function PlayGame() {
                 Song List
               </Link>
             </div>
+            {/* Learn more about this song's concepts */}
+            <div className="flex flex-wrap gap-2 justify-center mt-3">
+              {song.key && (
+                <Link to="/explore/scales" className="px-3 py-1.5 bg-surface-800 text-surface-300 text-xs rounded-lg hover:bg-surface-700">
+                  Explore scales in {song.key} →
+                </Link>
+              )}
+              <Link to="/explore/chords" className="px-3 py-1.5 bg-surface-800 text-surface-300 text-xs rounded-lg hover:bg-surface-700">
+                Practice chords →
+              </Link>
+              {accuracy < 0.7 && (
+                <Link to="/challenges" className="px-3 py-1.5 bg-surface-800 text-surface-300 text-xs rounded-lg hover:bg-surface-700">
+                  Practice with challenges →
+                </Link>
+              )}
+            </div>
           </div>
         )}
       </div>

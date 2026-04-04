@@ -4,6 +4,7 @@ import { useAudioStore } from '@/stores/audioStore'
 import { useUserStore } from '@/stores/userStore'
 import { transposeNote, getChordNotes } from '@melodypath/music-theory'
 import InfoTooltip from '@/components/ui/InfoTooltip'
+import WhatIsThis from '@/components/ui/WhatIsThis'
 import { useEarTrainingStore } from '@/stores/earTrainingStore'
 
 // ─── Exercise types ──────────────────────────────────────────────────────────
@@ -271,6 +272,10 @@ export default function EarTraining() {
           Listen, then identify what you hear. +5 XP per correct answer.
         </p>
       </div>
+
+      <WhatIsThis
+        explanation="Training your ear means learning to recognize sounds without looking. We'll play something — you guess what it is. Start with Intervals (the distance between two notes) or Chords (multiple notes together). No instrument needed — just listen and click!"
+      />
 
       {/* Exercise type toggle */}
       <div className="flex items-center gap-3 flex-wrap">

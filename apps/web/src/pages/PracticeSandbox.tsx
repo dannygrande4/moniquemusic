@@ -6,6 +6,7 @@ import Tuner from '@/components/Tuner/Tuner'
 import BackingTrackPlayer from '@/components/Practice/BackingTrackPlayer'
 import AudioRecorder from '@/components/Practice/AudioRecorder'
 import InfoTooltip from '@/components/ui/InfoTooltip'
+import WhatIsThis from '@/components/ui/WhatIsThis'
 
 const INSTRUMENTS = [
   { value: 'piano' as const, icon: '🎹', label: 'Piano' },
@@ -113,6 +114,12 @@ export default function PracticeSandbox() {
           Free play with a metronome and backing tools
         </p>
       </div>
+
+      <WhatIsThis
+        explanation="This is your practice space! Use the metronome to keep a steady beat, the tuner to check if your guitar is in tune, backing tracks to jam along with, or the piano to experiment with notes and chords. Record yourself to hear how you sound!"
+        lessonId="rhythm-basics"
+        lessonTitle="Rhythm & Time"
+      />
 
       {/* Metronome section */}
       <div className="bg-white rounded-xl border border-surface-200 p-6 space-y-5">
