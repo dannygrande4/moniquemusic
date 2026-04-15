@@ -1,5 +1,5 @@
 import type { FretNote, NoteRole } from '@/components/Guitar/GuitarFretboard'
-import { getChord } from '@melodypath/music-theory'
+import { getChord } from '@moniquemusic/music-theory'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

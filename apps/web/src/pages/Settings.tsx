@@ -2,7 +2,7 @@ import { useUserStore } from '@/stores/userStore'
 import { useUIStore } from '@/stores/uiStore'
 import { useAudioStore } from '@/stores/audioStore'
 import InfoTooltip from '@/components/ui/InfoTooltip'
-import type { AgeGroup, InstrumentType, AgeMode } from '@melodypath/shared-types'
+import type { AgeGroup, InstrumentType, AgeMode } from '@moniquemusic/shared-types'
 
 const AGE_OPTIONS: { value: AgeGroup; label: string; desc: string }[] = [
   { value: 'KIDS', label: 'Junior (8–12)', desc: 'Colorful UI, simple language, shorter lessons' },
@@ -31,7 +31,7 @@ export default function Settings() {
     <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-6 sm:space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-surface-900">Settings</h1>
-        <p className="text-surface-500 text-sm mt-1">Customize your MelodyPath experience</p>
+        <p className="text-surface-500 text-sm mt-1">Customize your MoniqueMusic experience</p>
       </div>
 
       {/* ─── Profile ──────────────────────────────────────────────────── */}

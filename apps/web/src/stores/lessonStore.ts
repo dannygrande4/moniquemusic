@@ -32,6 +32,6 @@ export const useLessonStore = create<LessonState>()(
 
       reset: () => set({ completedLessons: {} }),
     }),
-    { name: 'melodypath-lessons' },
+    { name: 'moniquemusic-lessons' },
   ),
 )

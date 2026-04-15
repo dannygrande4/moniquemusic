@@ -10,7 +10,7 @@ import {
   getChord,
   getChordNotes,
   identifyChord,
-} from '@melodypath/music-theory'
+} from '@moniquemusic/music-theory'
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const CHORD_TYPES = [

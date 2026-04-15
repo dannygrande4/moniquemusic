@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-# ─── MelodyPath Production Build ─────────────────────────────────────────────
+# ─── MoniqueMusic Production Build ─────────────────────────────────────────────
 # This script builds the frontend for deployment.
 # Output: apps/web/dist/ (ready to serve as static files)
 
 cd "$(dirname "$0")/.."
 
-echo "=== MelodyPath Production Build ==="
+echo "=== MoniqueMusic Production Build ==="
 echo ""
 
 # Install dependencies
@@ -16,11 +16,11 @@ pnpm install --frozen-lockfile 2>/dev/null || pnpm install
 
 # Run tests
 echo "→ Running music-theory tests..."
-pnpm --filter @melodypath/music-theory run test
+pnpm --filter @moniquemusic/music-theory run test
 
 # Build frontend
 echo "→ Building frontend (production)..."
-pnpm --filter @melodypath/web run build
+pnpm --filter @moniquemusic/web run build
 
 echo ""
 echo "=== Build complete ==="

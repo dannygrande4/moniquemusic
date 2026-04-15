@@ -53,7 +53,7 @@ importers:
       '@fastify/jwt':
         specifier: ^9.1.0
         version: 9.1.0
-      '@melodypath/shared-types':
+      '@moniquemusic/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       '@prisma/client':
@@ -78,13 +78,13 @@ importers:
 
   apps/web:
     dependencies:
-      '@melodypath/audio-engine':
+      '@moniquemusic/audio-engine':
         specifier: workspace:*
         version: link:../../packages/audio-engine
-      '@melodypath/music-theory':
+      '@moniquemusic/music-theory':
         specifier: workspace:*
         version: link:../../packages/music-theory
-      '@melodypath/shared-types':
+      '@moniquemusic/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       '@supabase/supabase-js':
@@ -148,10 +148,10 @@ importers:
 
   packages/audio-engine:
     dependencies:
-      '@melodypath/music-theory':
+      '@moniquemusic/music-theory':
         specifier: workspace:*
         version: link:../music-theory
-      '@melodypath/shared-types':
+      '@moniquemusic/shared-types':
         specifier: workspace:*
         version: link:../shared-types
       pitchfinder:

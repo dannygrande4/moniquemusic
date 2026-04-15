@@ -17,8 +17,8 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.svg'],
         manifest: {
-          name: 'MelodyPath',
-          short_name: 'MelodyPath',
+          name: 'MoniqueMusic',
+          short_name: 'MoniqueMusic',
           description: 'Learn music your way — from first chord to jazz improvisation',
           theme_color: '#4f6ef7',
           background_color: '#fafafa',

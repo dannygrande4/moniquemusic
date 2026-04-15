@@ -30,7 +30,7 @@ export default async function progressRoutes(app: FastifyInstance) {
 
     const user = await prisma.user.upsert({
       where: { id: userId },
-      create: { id: userId, email: `${userId}@melodypath.local`, xp: amount, level: computeLevel(amount) },
+      create: { id: userId, email: `${userId}@moniquemusic.local`, xp: amount, level: computeLevel(amount) },
       update: { xp: { increment: amount } },
     })
 

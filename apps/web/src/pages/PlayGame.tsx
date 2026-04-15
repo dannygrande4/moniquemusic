@@ -5,9 +5,9 @@ import { getSongById } from '@/lib/songLibrary'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import { useUserStore } from '@/stores/userStore'
-import { MIDIManager } from '@melodypath/audio-engine'
+import { MIDIManager } from '@moniquemusic/audio-engine'
 import { useLeaderboardStore } from '@/stores/leaderboardStore'
-import type { TimingGrade, SongGrade, NoteEvent } from '@melodypath/shared-types'
+import type { TimingGrade, SongGrade, NoteEvent } from '@moniquemusic/shared-types'
 
 // ─── Scoring ─────────────────────────────────────────────────────────────────
 

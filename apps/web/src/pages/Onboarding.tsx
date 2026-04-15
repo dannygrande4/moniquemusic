@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '@/stores/userStore'
 import { useUIStore } from '@/stores/uiStore'
-import type { AgeGroup, InstrumentType, SkillLevel, AgeMode } from '@melodypath/shared-types'
+import type { AgeGroup, InstrumentType, SkillLevel, AgeMode } from '@moniquemusic/shared-types'
 
 type Step = 'age' | 'instrument' | 'quiz' | 'done'
 
@@ -87,7 +87,7 @@ export default function Onboarding() {
         {/* Logo */}
         <div className="text-center mb-8">
           <span className="text-4xl">🎵</span>
-          <h1 className="text-2xl font-bold text-primary-700 mt-2">MelodyPath</h1>
+          <h1 className="text-2xl font-bold text-primary-700 mt-2">MoniqueMusic</h1>
         </div>
 
         {step === 'age' && (

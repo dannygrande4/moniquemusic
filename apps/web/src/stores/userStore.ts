@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { User, SkillLevel, InstrumentType, AgeGroup } from '@melodypath/shared-types'
+import type { User, SkillLevel, InstrumentType, AgeGroup } from '@moniquemusic/shared-types'
 import { syncXP } from '@/lib/apiSync'
 
 // XP thresholds per level (level 1 → 2 needs 100 XP, etc.)
@@ -115,7 +115,7 @@ export const useUserStore = create<UserState>()(
       reset: () => set(defaultState),
     }),
     {
-      name: 'melodypath-user',
+      name: 'moniquemusic-user',
       partialize: (state) => ({
         id: state.id,
         email: state.email,

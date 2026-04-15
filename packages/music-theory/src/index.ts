@@ -1,5 +1,5 @@
 import { Chord, Scale, Interval, Note, Key } from 'tonal'
-import type { ChordInfo, ScaleInfo } from '@melodypath/shared-types'
+import type { ChordInfo, ScaleInfo } from '@moniquemusic/shared-types'
 
 // ─── Chord Utilities ──────────────────────────────────────────────────────────
 

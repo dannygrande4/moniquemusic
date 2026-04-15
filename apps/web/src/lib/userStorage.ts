@@ -3,7 +3,7 @@
  * When user changes, old stores are ignored and fresh ones load.
  */
 
-const STORAGE_PREFIX = 'melodypath'
+const STORAGE_PREFIX = 'moniquemusic'
 
 /** Get the current active user ID from localStorage */
 export function getActiveUserId(): string | null {
@@ -35,11 +35,11 @@ export function userStorageKey(storeName: string, userId?: string | null): strin
  */
 export function clearAnonymousProgress(): void {
   const keysToRemove = [
-    'melodypath-user',
-    'melodypath-ui',
-    'melodypath-lessons',
-    'melodypath-leaderboard',
-    'melodypath-ear-training',
+    'moniquemusic-user',
+    'moniquemusic-ui',
+    'moniquemusic-lessons',
+    'moniquemusic-leaderboard',
+    'moniquemusic-ear-training',
   ]
   for (const key of keysToRemove) {
     localStorage.removeItem(key)

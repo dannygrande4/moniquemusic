@@ -1,5 +1,5 @@
 {
-  "name": "@melodypath/web",
+  "name": "@moniquemusic/web",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -10,9 +10,9 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@melodypath/audio-engine": "workspace:*",
-    "@melodypath/music-theory": "workspace:*",
-    "@melodypath/shared-types": "workspace:*",
+    "@moniquemusic/audio-engine": "workspace:*",
+    "@moniquemusic/music-theory": "workspace:*",
+    "@moniquemusic/shared-types": "workspace:*",
     "@supabase/supabase-js": "^2.101.1",
     "@tonejs/midi": "^2.0.28",
     "clsx": "^2.1.1",

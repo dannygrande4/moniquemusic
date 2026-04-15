@@ -51,6 +51,6 @@ export const useLeaderboardStore = create<LeaderboardState>()(
         return scores?.[0] ?? null
       },
     }),
-    { name: 'melodypath-leaderboard' },
+    { name: 'moniquemusic-leaderboard' },
   ),
 )

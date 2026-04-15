@@ -1,5 +1,5 @@
 {
-  "name": "@melodypath/music-theory",
+  "name": "@moniquemusic/music-theory",
   "version": "0.0.1",
   "private": true,
   "main": "./src/index.ts",

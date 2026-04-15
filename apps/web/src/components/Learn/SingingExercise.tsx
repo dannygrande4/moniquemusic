@@ -1,8 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { PitchDetector } from '@melodypath/audio-engine'
+import { PitchDetector } from '@moniquemusic/audio-engine'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
-import type { PitchResult } from '@melodypath/shared-types'
+import type { PitchResult } from '@moniquemusic/shared-types'
 
 interface SingingExerciseProps {
   /** Target notes to sing, e.g. ["C4", "E4", "G4"] */

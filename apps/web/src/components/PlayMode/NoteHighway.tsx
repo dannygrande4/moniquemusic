@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback, useState } from 'react'
-import type { NoteEvent, TimingGrade } from '@melodypath/shared-types'
+import type { NoteEvent, TimingGrade } from '@moniquemusic/shared-types'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 

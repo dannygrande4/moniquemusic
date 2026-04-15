@@ -1,4 +1,4 @@
-import type { SkillLevel } from '@melodypath/shared-types'
+import type { SkillLevel } from '@moniquemusic/shared-types'
 
 export type StepType = 'text' | 'exercise' | 'quiz'
 

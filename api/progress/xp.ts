@@ -25,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const user = await prisma.user.upsert({
     where: { id: userId },
-    create: { id: userId, email: `${userId}@melodypath.local`, xp: amount, level: computeLevel(amount) },
+    create: { id: userId, email: `${userId}@moniquemusic.local`, xp: amount, level: computeLevel(amount) },
     update: { xp: { increment: amount } },
   })
 

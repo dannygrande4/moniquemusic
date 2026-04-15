@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
-import { getChordNotes, getProgressionChords } from '@melodypath/music-theory'
+import { getChordNotes, getProgressionChords } from '@moniquemusic/music-theory'
 import InfoTooltip from '@/components/ui/InfoTooltip'
 
 const MAJOR_KEYS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']

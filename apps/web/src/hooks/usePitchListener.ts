@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { PitchDetector } from '@melodypath/audio-engine'
-import type { PitchResult } from '@melodypath/shared-types'
+import { PitchDetector } from '@moniquemusic/audio-engine'
+import type { PitchResult } from '@moniquemusic/shared-types'
 
 interface PitchListenerOptions {
   holdTime?: number

@@ -45,7 +45,7 @@ export function useAuthSync() {
         const earState = useEarTrainingStore.getState()
 
         localStorage.setItem(
-          `melodypath-user-${userId}`,
+          `moniquemusic-user-${userId}`,
           JSON.stringify({
             state: {
               id: userId,
@@ -61,15 +61,15 @@ export function useAuthSync() {
           }),
         )
         localStorage.setItem(
-          `melodypath-lessons-${userId}`,
+          `moniquemusic-lessons-${userId}`,
           JSON.stringify({ state: { completedLessons: lessonState.completedLessons } }),
         )
         localStorage.setItem(
-          `melodypath-leaderboard-${userId}`,
+          `moniquemusic-leaderboard-${userId}`,
           JSON.stringify({ state: { highScores: leaderboardState.highScores } }),
         )
         localStorage.setItem(
-          `melodypath-ear-training-${userId}`,
+          `moniquemusic-ear-training-${userId}`,
           JSON.stringify({
             state: {
               intervalStats: earState.intervalStats,
@@ -113,7 +113,7 @@ function saveCurrentUserData(userId: string) {
   const earState = useEarTrainingStore.getState()
 
   localStorage.setItem(
-    `melodypath-user-${userId}`,
+    `moniquemusic-user-${userId}`,
     JSON.stringify({
       state: {
         id: userId,
@@ -129,15 +129,15 @@ function saveCurrentUserData(userId: string) {
     }),
   )
   localStorage.setItem(
-    `melodypath-lessons-${userId}`,
+    `moniquemusic-lessons-${userId}`,
     JSON.stringify({ state: { completedLessons: lessonState.completedLessons } }),
   )
   localStorage.setItem(
-    `melodypath-leaderboard-${userId}`,
+    `moniquemusic-leaderboard-${userId}`,
     JSON.stringify({ state: { highScores: leaderboardState.highScores } }),
   )
   localStorage.setItem(
-    `melodypath-ear-training-${userId}`,
+    `moniquemusic-ear-training-${userId}`,
     JSON.stringify({
       state: {
         intervalStats: earState.intervalStats,
@@ -151,7 +151,7 @@ function saveCurrentUserData(userId: string) {
 function loadUserData(userId: string) {
   // Load user store
   try {
-    const raw = localStorage.getItem(`melodypath-user-${userId}`)
+    const raw = localStorage.getItem(`moniquemusic-user-${userId}`)
     if (raw) {
       const { state } = JSON.parse(raw)
       useUserStore.getState().setUser(state)
@@ -162,7 +162,7 @@ function loadUserData(userId: string) {
 
   // Load lesson store
   try {
-    const raw = localStorage.getItem(`melodypath-lessons-${userId}`)
+    const raw = localStorage.getItem(`moniquemusic-lessons-${userId}`)
     if (raw) {
       const { state } = JSON.parse(raw)
       useLessonStore.setState({ completedLessons: state.completedLessons ?? {} })
@@ -173,7 +173,7 @@ function loadUserData(userId: string) {
 
   // Load leaderboard
   try {
-    const raw = localStorage.getItem(`melodypath-leaderboard-${userId}`)
+    const raw = localStorage.getItem(`moniquemusic-leaderboard-${userId}`)
     if (raw) {
       const { state } = JSON.parse(raw)
       useLeaderboardStore.setState({ highScores: state.highScores ?? {} })
@@ -182,7 +182,7 @@ function loadUserData(userId: string) {
 
   // Load ear training
   try {
-    const raw = localStorage.getItem(`melodypath-ear-training-${userId}`)
+    const raw = localStorage.getItem(`moniquemusic-ear-training-${userId}`)
     if (raw) {
       const { state } = JSON.parse(raw)
       useEarTrainingStore.setState({

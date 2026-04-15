@@ -6,7 +6,7 @@ import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import InfoTooltip from '@/components/ui/InfoTooltip'
 import WhatIsThis from '@/components/ui/WhatIsThis'
-import { getScale, getScaleNotes } from '@melodypath/music-theory'
+import { getScale, getScaleNotes } from '@moniquemusic/music-theory'
 
 const SPEED_PRESETS = [
   { label: 'Slow', ms: 500 },

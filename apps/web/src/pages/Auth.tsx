@@ -56,7 +56,7 @@ export default function Auth() {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2">
             <span className="text-4xl">🎵</span>
-            <span className="text-2xl font-bold text-primary-700">MelodyPath</span>
+            <span className="text-2xl font-bold text-primary-700">MoniqueMusic</span>
           </Link>
         </div>
 

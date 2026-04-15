@@ -1,5 +1,5 @@
 {
-  "name": "@melodypath/audio-engine",
+  "name": "@moniquemusic/audio-engine",
   "version": "0.0.1",
   "private": true,
   "main": "./src/index.ts",
@@ -8,8 +8,8 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@melodypath/music-theory": "workspace:*",
-    "@melodypath/shared-types": "workspace:*",
+    "@moniquemusic/music-theory": "workspace:*",
+    "@moniquemusic/shared-types": "workspace:*",
     "pitchfinder": "^2.0.4",
     "soundfont-player": "^0.12.0",
     "tone": "^15.1.22"

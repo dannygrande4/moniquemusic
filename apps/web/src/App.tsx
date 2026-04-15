@@ -43,10 +43,10 @@ export default function App() {
 
   // One-time: clear old anonymous progress on first load after this update
   useEffect(() => {
-    const migrationKey = 'melodypath-auth-migration-v1'
+    const migrationKey = 'moniquemusic-auth-migration-v1'
     if (!localStorage.getItem(migrationKey)) {
       // Clear all old non-user-scoped data
-      const keysToRemove = ['melodypath-user', 'melodypath-lessons', 'melodypath-leaderboard', 'melodypath-ear-training']
+      const keysToRemove = ['moniquemusic-user', 'moniquemusic-lessons', 'moniquemusic-leaderboard', 'moniquemusic-ear-training']
       for (const key of keysToRemove) localStorage.removeItem(key)
       localStorage.setItem(migrationKey, '1')
     }

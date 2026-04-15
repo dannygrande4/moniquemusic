@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { parseMidiToNoteEvents } from '@/lib/midiParser'
 import { SONG_LIBRARY, type SongData } from '@/lib/songLibrary'
-import type { NoteEvent } from '@melodypath/shared-types'
+import type { NoteEvent } from '@moniquemusic/shared-types'
 
 // Store custom songs in memory (persists only during session)
 // TODO: persist to localStorage or IndexedDB for cross-session storage

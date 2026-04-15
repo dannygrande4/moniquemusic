@@ -1,5 +1,5 @@
 import { Midi } from '@tonejs/midi'
-import type { NoteEvent } from '@melodypath/shared-types'
+import type { NoteEvent } from '@moniquemusic/shared-types'
 
 // Chromatic note names for scalar neighbor lookup
 const CHROMATIC = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']

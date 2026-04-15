@@ -1,7 +1,7 @@
-# MelodyPath — Build Tasks
+# MoniqueMusic — Build Tasks
 
 > **Initial URL:** `dannygrande.com/music`  
-> **Future URL:** Own domain (e.g. `melodypath.com`)  
+> **Future URL:** Own domain (e.g. `moniquemusic.com`)  
 > Routing and asset paths are fully env-var driven — migration = change 2 vars + redeploy.
 
 ---
@@ -244,7 +244,7 @@
 - [ ] Configure nginx on dannygrande.com server:
   ```nginx
   location /music {
-    alias /var/www/melodypath/dist;
+    alias /var/www/moniquemusic/dist;
     try_files $uri $uri/ /music/index.html;
   }
   location /music-api/ {
@@ -263,14 +263,14 @@
 
 ## Phase 16 — Domain Migration (when ready)
 
-- [ ] Register new domain (e.g. `melodypath.com`)
+- [ ] Register new domain (e.g. `moniquemusic.com`)
 - [ ] Point DNS A record to same server IP
 - [ ] Add new nginx server block:
   ```nginx
   server {
-    server_name melodypath.com www.melodypath.com;
+    server_name moniquemusic.com www.moniquemusic.com;
     location / {
-      root /var/www/melodypath/dist;
+      root /var/www/moniquemusic/dist;
       try_files $uri $uri/ /index.html;
     }
     location /api/ {
@@ -278,16 +278,16 @@
     }
   }
   ```
-- [ ] Add 301 redirect from `dannygrande.com/music` → `https://melodypath.com`
-- [ ] Get SSL cert for new domain (`certbot --nginx -d melodypath.com`)
+- [ ] Add 301 redirect from `dannygrande.com/music` → `https://moniquemusic.com`
+- [ ] Get SSL cert for new domain (`certbot --nginx -d moniquemusic.com`)
 - [ ] Update env vars and rebuild:
   - `VITE_BASE_PATH=/`
-  - `VITE_API_URL=https://api.melodypath.com` (or `https://melodypath.com/api`)
+  - `VITE_API_URL=https://api.moniquemusic.com` (or `https://moniquemusic.com/api`)
 - [ ] Run `pnpm build` and deploy new dist
-- [ ] Update Supabase Auth redirect URLs to `https://melodypath.com`
-- [ ] Update `CORS_ORIGINS` on server to include `melodypath.com`
+- [ ] Update Supabase Auth redirect URLs to `https://moniquemusic.com`
+- [ ] Update `CORS_ORIGINS` on server to include `moniquemusic.com`
 - [ ] Update any OAuth app callback URLs
-- [ ] **Verify:** `melodypath.com` loads app at root; old `/music` URL redirects correctly
+- [ ] **Verify:** `moniquemusic.com` loads app at root; old `/music` URL redirects correctly
 
 ---
 

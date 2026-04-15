@@ -5,7 +5,7 @@ set -e
 # Edit these variables for your server:
 SERVER_USER="${DEPLOY_USER:-danny}"
 SERVER_HOST="${DEPLOY_HOST:-dannygrande.com}"
-SERVER_PATH="${DEPLOY_PATH:-/var/www/melodypath/dist}"
+SERVER_PATH="${DEPLOY_PATH:-/var/www/moniquemusic/dist}"
 
 cd "$(dirname "$0")/.."
 

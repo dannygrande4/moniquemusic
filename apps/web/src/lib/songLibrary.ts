@@ -1,4 +1,4 @@
-import type { NoteEvent } from '@melodypath/shared-types'
+import type { NoteEvent } from '@moniquemusic/shared-types'
 import {
   generateOdeToJoy,
   generateSmokeOnTheWater,
@@ -84,7 +84,7 @@ export const SONG_LIBRARY: SongData[] = [
   {
     id: 'demo-pattern',
     title: 'Practice Patterns',
-    artist: 'MelodyPath',
+    artist: 'MoniqueMusic',
     bpm: 120,
     key: 'C',
     difficulty: 1,

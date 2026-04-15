@@ -23,7 +23,7 @@ jobs:
         run: pnpm install
 
       - name: Run music-theory tests
-        run: pnpm --filter @melodypath/music-theory run test
+        run: pnpm --filter @moniquemusic/music-theory run test
 
       - name: Build frontend
-        run: pnpm --filter @melodypath/web run build
+        run: pnpm --filter @moniquemusic/web run build

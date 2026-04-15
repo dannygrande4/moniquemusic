@@ -1,5 +1,5 @@
 import type { AudioEngine } from './AudioEngine.js'
-import { midiToNote } from '@melodypath/music-theory'
+import { midiToNote } from '@moniquemusic/music-theory'
 
 export type MIDINoteCallback = (note: string, velocity: number) => void
 export type MIDINoteOffCallback = (note: string) => void

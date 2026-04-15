@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { AgeMode } from '@melodypath/shared-types'
+import type { AgeMode } from '@moniquemusic/shared-types'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -34,7 +34,7 @@ export const useUIStore = create<UIState>()(
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
     }),
     {
-      name: 'melodypath-ui',
+      name: 'moniquemusic-ui',
       partialize: (state) => ({
         ageMode: state.ageMode,
         theme: state.theme,

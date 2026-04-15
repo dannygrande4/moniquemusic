@@ -65,6 +65,6 @@ export const useEarTrainingStore = create<EarTrainingState>()(
 
       reset: () => set({ intervalStats: {}, chordStats: {}, totalCorrect: 0 }),
     }),
-    { name: 'melodypath-ear-training' },
+    { name: 'moniquemusic-ear-training' },
   ),
 )

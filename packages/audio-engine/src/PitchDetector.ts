@@ -1,6 +1,6 @@
 import { YIN } from 'pitchfinder'
-import { noteToFrequency, midiToNote } from '@melodypath/music-theory'
-import type { PitchResult } from '@melodypath/shared-types'
+import { noteToFrequency, midiToNote } from '@moniquemusic/music-theory'
+import type { PitchResult } from '@moniquemusic/shared-types'
 
 export type PitchCallback = (result: PitchResult | null) => void
 

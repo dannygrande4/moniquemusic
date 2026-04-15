@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { AudioEngine, MIDIManager, type SupportedInstrument } from '@melodypath/audio-engine'
+import { AudioEngine, MIDIManager, type SupportedInstrument } from '@moniquemusic/audio-engine'
 
 interface AudioState {
   engine: AudioEngine

@@ -7,7 +7,7 @@ export default function Landing() {
       <header className="flex items-center justify-between px-4 sm:px-8 py-4 sm:py-5">
         <div className="flex items-center gap-2">
           <span className="text-3xl">🎵</span>
-          <span className="text-xl font-bold text-primary-700">MelodyPath</span>
+          <span className="text-xl font-bold text-primary-700">MoniqueMusic</span>
         </div>
         <div className="flex items-center gap-3">
           <Link
@@ -32,7 +32,7 @@ export default function Landing() {
           <span className="text-primary-600">your way.</span>
         </h1>
         <p className="text-lg sm:text-xl text-surface-600 max-w-2xl mb-10">
-          From your very first chord to jazz improvisation — MelodyPath meets you
+          From your very first chord to jazz improvisation — MoniqueMusic meets you
           where you are. Play songs, train your ear, and grow at your own pace.
         </p>
 
