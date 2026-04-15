@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react'
 import { useAudioInit } from '@/hooks/useAudioInit'
 import { useAudioStore } from '@/stores/audioStore'
 import PianoKeyboard from '@/components/Piano/PianoKeyboard'
+import GuitarFretboard from '@/components/Guitar/GuitarFretboard'
 import Tuner from '@/components/Tuner/Tuner'
 import BackingTrackPlayer from '@/components/Practice/BackingTrackPlayer'
 import AudioRecorder from '@/components/Practice/AudioRecorder'
@@ -104,6 +105,20 @@ export default function PracticeSandbox() {
       setActiveNotes((prev) => prev.filter((n) => n !== note))
     },
     [engine],
+  )
+
+  // ─── Guitar ─────────────────────────────────────────────────────────────
+
+  const handleGuitarPluck = useCallback(
+    async (note: string) => {
+      await ensureAudio()
+      engine.playNote(note, '4n')
+      setActiveNotes((prev) => [...prev.filter((n) => n !== note), note])
+      setTimeout(() => {
+        setActiveNotes((prev) => prev.filter((n) => n !== note))
+      }, 350)
+    },
+    [ensureAudio, engine],
   )
 
   return (
@@ -250,6 +265,33 @@ export default function PracticeSandbox() {
 
       {/* Audio recorder */}
       <AudioRecorder />
+
+      {/* Free play guitar */}
+      <div>
+        <h2 className="flex items-center text-lg font-bold text-surface-900 mb-3">
+          Free Play Guitar
+          <InfoTooltip
+            size="md"
+            text="Click any fret to pluck that note. Standard tuning (E A D G B E) from low to high."
+            detail="Auto-switches the instrument sound to guitar when you play. Great for finding notes, trying riffs, or exploring the fretboard."
+          />
+        </h2>
+        <div className="bg-white rounded-xl border border-surface-200 p-4 overflow-x-auto">
+          <GuitarFretboard
+            frets={12}
+            onNotePlay={async (note) => {
+              if (currentInstrument !== 'guitar') {
+                await ensureAudio()
+                setInstrument('guitar')
+              }
+              handleGuitarPluck(note)
+            }}
+            activeNotes={activeNotes}
+            showFretNumbers
+            showLabels={false}
+          />
+        </div>
+      </div>
 
       {/* Free play piano */}
       <div>
