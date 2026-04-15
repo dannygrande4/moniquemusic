@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '@/stores/userStore'
 import { useUIStore } from '@/stores/uiStore'
-import type { AgeGroup, InstrumentType, SkillLevel, AgeMode } from '@moniquemusic/shared-types'
+import type { InstrumentType, SkillLevel } from '@moniquemusic/shared-types'
 
-type Step = 'age' | 'instrument' | 'quiz' | 'done'
+type Step = 'instrument' | 'quiz' | 'done'
 
 // Skill assessment questions - each correct answer adds points
 const QUIZ_QUESTIONS = [
@@ -40,19 +40,16 @@ export default function Onboarding() {
   const { setAgeGroup, setInstrument, setSkillLevel } = useUserStore()
   const { setAgeMode } = useUIStore()
 
-  const [step, setStep] = useState<Step>('age')
-  const [_age, setAge] = useState<AgeGroup | null>(null)
+  const [step, setStep] = useState<Step>('instrument')
   const [_instrument, setInstrumentLocal] = useState<InstrumentType | null>(null)
   const [quizIdx, setQuizIdx] = useState(0)
   const [quizScore, setQuizScore] = useState(0)
 
-  function handleAge(group: AgeGroup) {
-    setAge(group)
-    setAgeGroup(group)
-    const mode: AgeMode = group === 'KIDS' ? 'kids' : group === 'SENIOR' ? 'accessible' : 'adult'
-    setAgeMode(mode)
-    setStep('instrument')
-  }
+  // Default to 13-59 Adult standard
+  useEffect(() => {
+    setAgeGroup('ADULT')
+    setAgeMode('adult')
+  }, [setAgeGroup, setAgeMode])
 
   function handleInstrument(inst: InstrumentType) {
     setInstrumentLocal(inst)
@@ -89,30 +86,6 @@ export default function Onboarding() {
           <span className="text-4xl">🎵</span>
           <h1 className="text-2xl font-bold text-primary-700 mt-2">MoniqueMusic</h1>
         </div>
-
-        {step === 'age' && (
-          <div>
-            <h2 className="text-2xl font-bold text-center text-surface-900 mb-2">How old are you?</h2>
-            <p className="text-surface-500 text-center mb-8">We'll tailor the experience just for you.</p>
-            <div className="grid grid-cols-3 gap-4">
-              <button className={btnClass} onClick={() => handleAge('KIDS')}>
-                <span className="text-4xl">🧒</span>
-                <span className="font-bold">8–12</span>
-                <span className="text-xs text-surface-500">Junior</span>
-              </button>
-              <button className={btnClass} onClick={() => handleAge('ADULT')}>
-                <span className="text-4xl">🧑</span>
-                <span className="font-bold">13–59</span>
-                <span className="text-xs text-surface-500">Adult</span>
-              </button>
-              <button className={btnClass} onClick={() => handleAge('SENIOR')}>
-                <span className="text-4xl">👴</span>
-                <span className="font-bold">60+</span>
-                <span className="text-xs text-surface-500">Senior</span>
-              </button>
-            </div>
-          </div>
-        )}
 
         {step === 'instrument' && (
           <div>
