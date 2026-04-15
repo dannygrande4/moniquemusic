@@ -28,7 +28,7 @@ export default function Landing() {
       {/* Hero */}
       <main className="flex-1 flex flex-col items-center justify-center text-center px-6 pb-20">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-500/10 text-accent-700 font-semibold text-sm mb-6">
-          🎂 Happy Birthday, Monique! <span className="opacity-60">(on a scale of 1–10? 6... 7 🏀)</span>
+          🎂 Happy Birthday, Monique!
         </div>
         <h1 className="text-5xl md:text-7xl font-extrabold text-surface-900 leading-tight mb-6">
           A little world of music,<br />
@@ -38,11 +38,8 @@ export default function Landing() {
           This is your very own place to play songs, learn chords, train your ear,
           and have fun making music — at your own pace, your own way.
         </p>
-        <p className="text-base sm:text-lg text-surface-500 max-w-2xl mb-2 italic">
+        <p className="text-base sm:text-lg text-surface-500 max-w-2xl mb-10 italic">
           With love, from Uncle Danny, Uncle Ben & Auntie Jordan 💛
-        </p>
-        <p className="text-sm text-surface-400 max-w-2xl mb-10">
-          (we asked how much we love you and the answer was, obviously, 6... 7)
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 mb-16">
@@ -63,9 +60,9 @@ export default function Landing() {
         {/* Feature grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl w-full">
           {[
-            { icon: '🎸', title: 'Play Mode', desc: 'Guitar Hero-style note highway. How good are you? 6... 7 🏀' },
-            { icon: '📚', title: 'Guided Lessons', desc: 'From your first chord to shredding in 6/8 time (or 7/8, your call)' },
-            { icon: '👂', title: 'Ear Training', desc: 'Hear that interval? Is it a 6th? A 7th? Only one way to find out 👂' },
+            { icon: '🎸', title: 'Play Mode', desc: 'Guitar Hero-style note highway for any instrument' },
+            { icon: '📚', title: 'Guided Lessons', desc: 'Adaptive curriculum from beginner to advanced' },
+            { icon: '👂', title: 'Ear Training', desc: 'Develop your musical ear with interactive exercises' },
           ].map((f) => (
             <div key={f.title} className="bg-white rounded-2xl p-6 shadow-sm border border-surface-100 text-left">
               <div className="text-3xl mb-3">{f.icon}</div>
