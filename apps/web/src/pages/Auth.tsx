@@ -2,14 +2,19 @@ import { useState, useCallback, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 
+const USERNAME_EMAIL_DOMAIN = 'moniquemusic.local'
+
+function usernameToEmail(username: string): string {
+  return `${username.trim().toLowerCase()}@${USERNAME_EMAIL_DOMAIN}`
+}
+
 export default function Auth() {
   const navigate = useNavigate()
   const { user, error, loading, signUp, signIn, signInWithGoogle, clearError } = useAuthStore()
 
   const [mode, setMode] = useState<'login' | 'signup'>('login')
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmSent, setConfirmSent] = useState(false)
 
   // Redirect if already logged in
   useEffect(() => {
@@ -20,34 +25,16 @@ export default function Auth() {
     e.preventDefault()
     clearError()
 
+    const email = usernameToEmail(username)
+
     if (mode === 'signup') {
       const success = await signUp(email, password)
-      if (success) setConfirmSent(true)
+      if (success) navigate('/dashboard')
     } else {
       const success = await signIn(email, password)
       if (success) navigate('/dashboard')
     }
-  }, [mode, email, password, signUp, signIn, navigate, clearError])
-
-  if (confirmSent) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-500/10 flex items-center justify-center p-6">
-        <div className="w-full max-w-sm text-center space-y-4">
-          <div className="text-5xl">📧</div>
-          <h1 className="text-2xl font-bold text-surface-900">Check your email</h1>
-          <p className="text-surface-500">
-            We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.
-          </p>
-          <button
-            onClick={() => { setConfirmSent(false); setMode('login') }}
-            className="text-primary-600 text-sm font-medium hover:underline"
-          >
-            Back to login
-          </button>
-        </div>
-      </div>
-    )
-  }
+  }, [mode, username, password, signUp, signIn, navigate, clearError])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-500/10 flex items-center justify-center p-6">
@@ -90,14 +77,19 @@ export default function Auth() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-surface-700 mb-1 block">Email</label>
+            <label className="text-sm font-medium text-surface-700 mb-1 block">Username</label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9_.-]/g, ''))}
               required
+              minLength={2}
+              maxLength={32}
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               className="w-full px-3 py-2.5 border border-surface-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
-              placeholder="you@example.com"
+              placeholder={mode === 'signup' ? 'pick a username' : 'your username'}
             />
           </div>
           <div>
