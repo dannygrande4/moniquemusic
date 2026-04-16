@@ -59,7 +59,7 @@ export default function Landing() {
             Log In
           </Link>
           <Link
-            to="/onboarding"
+            to="/auth"
             className="px-5 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
           >
             Get Started
@@ -96,7 +96,7 @@ export default function Landing() {
             With love, from Uncle Danny, Uncle Ben & Auntie Jordan 💛
           </p>
           <Link
-            to="/onboarding"
+            to="/auth"
             className="mt-10 px-10 py-5 bg-primary-600 text-white rounded-2xl font-bold text-xl hover:bg-primary-700 transition-colors shadow-xl hover:scale-105 transform duration-200"
           >
             🎁 Open Your Gift
@@ -123,7 +123,7 @@ export default function Landing() {
 
         <div className="flex flex-col sm:flex-row gap-4 mb-16">
           <Link
-            to="/onboarding"
+            to="/auth"
             className="px-8 py-4 bg-primary-600 text-white rounded-xl font-bold text-lg hover:bg-primary-700 transition-colors shadow-lg"
           >
             Start Learning
