@@ -3,7 +3,6 @@ import { Outlet, NavLink, Link } from 'react-router-dom'
 import { useUIStore } from '@/stores/uiStore'
 import { useUserStore } from '@/stores/userStore'
 import { useAuthStore } from '@/stores/authStore'
-import { APP_VERSION } from '@/lib/version'
 
 const NAV_ITEMS = [
   { to: '/dashboard', icon: '🏠', label: 'Dashboard' },
@@ -39,7 +38,6 @@ export default function AppShell() {
       {/* Mobile top bar */}
       <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3 bg-white border-b border-surface-200 md:hidden">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-mono text-surface-500 bg-surface-100 px-2 py-1 rounded">v{APP_VERSION}</span>
         </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -72,7 +70,6 @@ export default function AppShell() {
         <div className="flex items-center gap-2 px-4 py-4 border-b border-surface-200">
           <span className="text-2xl">🎵</span>
           <span className="font-bold text-primary-600 text-lg tracking-tight">MoniqueMusic</span>
-          <span className="text-[9px] text-surface-400 bg-surface-100 px-1.5 py-0.5 rounded font-mono">v{APP_VERSION}</span>
         </div>
         <nav className="flex-1 py-4 space-y-1 px-2">
           {navItems.map((item) => (
@@ -114,7 +111,6 @@ export default function AppShell() {
       >
         {/* Logo */}
         <div className="flex items-center gap-2 px-4 py-4 border-b border-surface-200">
-          <span className="text-sm font-mono text-surface-500 bg-surface-100 px-2 py-1 rounded">v{APP_VERSION}</span>
         </div>
 
         {/* Nav */}
